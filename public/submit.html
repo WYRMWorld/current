@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Submit</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <a href="index.html" class="btn">Home</a>
+  <a href="listen.html" class="btn">Listen</a>
+  <a href="admin.html" class="btn">Admin</a>
+</nav>
+<h2>Submit Your Track</h2>
+<main class="form-container">
+  <form action="/submit" method="POST" enctype="multipart/form-data">
+    <label>Name:</label>
+    <input type="text" name="name" required>
+    <label>Track File:</label>
+    <input type="file" name="track" accept=".wav,.mp3" required>
+    <fieldset>
+      <legend>Queue Type</legend>
+      <label><input type="radio" name="type" value="feedback" checked> Feedback</label>
+      <label><input type="radio" name="type" value="battle"> Beat Battle</label>
+    </fieldset>
+    <button class="btn-primary" type="submit">Join Queue</button>
+  </form>
+  <section class="queue-preview">
+    <h3>Current Queue</h3>
+    <div class="queue-container">
+      <table class="queue-table">
+        <thead><tr><th>Position</th><th>Name</th><th>Filename</th><th>Type</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script>
+async function loadQueue(){
+  const res = await fetch('/submissions');
+  const data = await res.json();
+  const tbody = document.querySelector('.queue-table tbody');
+  tbody.innerHTML = '';
+  data.forEach((item,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+(i+1)+'</td><td>'+item.name+'</td><td>'+item.originalName+'</td><td>'+item.type+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+window.addEventListener('DOMContentLoaded', loadQueue);
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <a href="index.html" class="btn">Home</a>
+  <a href="submit.html" class="btn">Submit</a>
+  <a href="listen.html" class="btn">Listen</a>
+</nav>
+<h2>Admin Dashboard</h2>
+<section class="queue-preview">
+  <h3>Submission Queue</h3>
+  <div class="queue-container">
+    <table class="queue-table">
+      <thead><tr><th>Position</th><th>Name</th><th>Track</th><th>Type</th></tr></thead>
+      <tbody id="admin-body"></tbody>
+    </table>
+  </div>
+</section>
+<script>
+async function loadAdmin(){
+  const res = await fetch('/submissions');
+  const data = await res.json();
+  const tbody = document.getElementById('admin-body');
+  tbody.innerHTML = '';
+  data.forEach((item,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+(i+1)+'</td><td>'+item.name+'</td>'
+      +'<td>'+item.originalName+'<br><audio controls src="/uploads/'+item.storedName+'"></audio></td>'
+      +'<td>'+item.type+'</td>';
+    tbody.appendChild(tr);
+  });
+}
+window.addEventListener('DOMContentLoaded', loadAdmin);
+</script>
+</body>
+</html>
