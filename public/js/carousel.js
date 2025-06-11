@@ -3,16 +3,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.track-scroll');
   const slides    = Array.from(container.children);
 
-  // clone for infinite loop
-  slides.forEach(slide => {
-    container.append(slide.cloneNode(true));
-    container.prepend(slide.cloneNode(true));
+  // Clone for infinite loop
+  slides.forEach(s => {
+    container.appendChild(s.cloneNode(true));
+    container.insertBefore(s.cloneNode(true), container.firstChild);
   });
 
-  let pos = 0, vel = 0, drag = false, startX = 0;
+  let pos = 0;
+  let vel = 0;
+  let drag = false;
+  let startX = 0;
   const w = slides[0].offsetWidth;
   const total = w * slides.length;
 
+  // Apply initial transform
   container.style.transform = `translateX(${pos}px)`;
 
   // Drag anywhere in wrapper
@@ -20,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
     drag = true;
     startX = e.clientX;
     wrapper.style.cursor = 'grabbing';
-    e.preventDefault();
   });
 
   window.addEventListener('mousemove', e => {
@@ -29,6 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
     startX = e.clientX;
     pos += dx;
     vel = dx;
+    // apply wrap immediately during drag
+    if (pos > -w)        pos -= total;
+    if (pos < -total*2)  pos += total;
     container.style.transform = `translateX(${pos}px)`;
   });
 
@@ -40,24 +46,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Arrow controls
   document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     pos += w;
-    if (pos > 0) pos -= total;
+    if (pos > -w)        pos -= total;
+    if (pos < -total*2)  pos += total;
     container.style.transform = `translateX(${pos}px)`;
   });
   document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
     pos -= w;
-    if (pos < -total*2) pos += total;
+    if (pos > -w)        pos -= total;
+    if (pos < -total*2)  pos += total;
     container.style.transform = `translateX(${pos}px)`;
   });
 
-  // inertia & looping
-  (function loop() {
+  // Inertia + continuous wrap
+  (function loop(){
     if (!drag) {
       pos += vel;
       vel *= 0.9;
-      if (pos > 0)       pos -= total;
-      if (pos < -total*2) pos += total;
-      container.style.transform = `translateX(${pos}px)`;
     }
+    // always wrap, even if dragging stopped mid‐wrap
+    if (pos > -w)        pos -= total;
+    if (pos < -total*2)  pos += total;
+    container.style.transform = `translateX(${pos}px)`;
     requestAnimationFrame(loop);
   })();
 });
