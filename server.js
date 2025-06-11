@@ -6,17 +6,18 @@ const multer            = require('multer');
 
 const app = express();
 
-// 0) Override Render’s CSP header to allow SoundCloud embeds
+// 0) Override CSP to allow particles.js and SoundCloud embeds
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy',
-    "default-src 'self' https://w.soundcloud.com https://api.soundcloud.com; " +
-    "script-src 'self' https://w.soundcloud.com 'unsafe-eval' 'unsafe-inline'; " +
+    "default-src 'self' https://w.soundcloud.com https://api.soundcloud.com https://cdn.jsdelivr.net; " +
+    "script-src 'self' https://w.soundcloud.com https://cdn.jsdelivr.net 'unsafe-eval' 'unsafe-inline'; " +
     "frame-src https://w.soundcloud.com; " +
     "connect-src https://api.soundcloud.com; " +
     "style-src 'self' 'unsafe-inline';"
   );
   next();
 });
+
 
 // 1) Body parsing
 app.use(express.urlencoded({ extended: true }));
