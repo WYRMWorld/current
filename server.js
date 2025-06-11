@@ -6,7 +6,7 @@ const multer            = require('multer');
 
 const app = express();
 
-// 0) Override CSP to allow SoundCloud embeds
+// 0) Override Render’s CSP header to allow SoundCloud embeds
 app.use((req, res, next) => {
   res.setHeader('Content-Security-Policy',
     "default-src 'self' https://w.soundcloud.com https://api.soundcloud.com; " +
@@ -32,7 +32,6 @@ app.use(['/admin', '/admin.html'], basicAuth({
   challenge: true,
   realm: 'WYRMWorldAdmin'
 }));
-
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
@@ -40,9 +39,9 @@ app.get('/admin', (req, res) => {
 // 4) Submission endpoint
 let submissions = [];
 app.post('/submit', upload.single('track'), (req, res) => {
-  const { name, type } = req.body;
-  const originalName   = req.file?.originalname || '';
-  const storedName     = req.file?.filename     || '';
+  const { name, type }    = req.body;
+  const originalName      = req.file?.originalname || '';
+  const storedName        = req.file?.filename     || '';
   submissions.push({ name, originalName, storedName, type });
   res.redirect('/submit.html');
 });

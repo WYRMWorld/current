@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  
-  <!-- Allow SoundCloud embeds to run eval() and inline scripts -->
+
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self' https://w.soundcloud.com https://api.soundcloud.com;
           script-src 'self' https://w.soundcloud.com 'unsafe-eval' 'unsafe-inline';
           frame-src https://w.soundcloud.com;
           connect-src https://api.soundcloud.com;
+          style-src 'self' 'unsafe-inline';
         ">
-  
+
   <title>Listen</title>
   <link rel="stylesheet" href="style.css">
+
   <script src="https://w.soundcloud.com/player/api.js" crossorigin="anonymous" defer></script>
 </head>
 <body>
