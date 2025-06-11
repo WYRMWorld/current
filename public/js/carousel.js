@@ -1,43 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
   const wrapper   = document.querySelector('.carousel-wrapper');
   const container = document.querySelector('.track-scroll');
-  const slides    = Array.from(container.children);
+  const originals = Array.from(container.children);
+  const n         = originals.length;
 
-  // Clone for infinite loop
-  slides.forEach(s => {
-    container.appendChild(s.cloneNode(true));
-    container.insertBefore(s.cloneNode(true), container.firstChild);
+  // Clone originals before & after for seamless loop
+  originals.forEach(slide => {
+    container.appendChild(slide.cloneNode(true));
+    container.insertBefore(slide.cloneNode(true), container.firstChild);
   });
 
-  let pos = 0;
-  let vel = 0;
-  let drag = false;
-  let startX = 0;
-  const w = slides[0].offsetWidth;
-  const total = w * slides.length;
+  const w     = originals[0].offsetWidth;
+  const total = w * n;
 
-  // Apply initial transform
+  // Start centered on the original slides
+  let pos    = -total;
+  let vel    = 0;
+  let drag   = false;
+  let startX = 0;
+
   container.style.transform = `translateX(${pos}px)`;
 
-  // Drag anywhere in wrapper
+  // Drag anywhere
   wrapper.addEventListener('mousedown', e => {
-    drag = true;
+    drag   = true;
     startX = e.clientX;
     wrapper.style.cursor = 'grabbing';
   });
-
   window.addEventListener('mousemove', e => {
     if (!drag) return;
     const dx = e.clientX - startX;
     startX = e.clientX;
-    pos += dx;
-    vel = dx;
-    // apply wrap immediately during drag
-    if (pos > -w)        pos -= total;
-    if (pos < -total*2)  pos += total;
+    pos   += dx;
+    vel    = dx;
+    // Instant wrap during drag
+    if (pos > 0)       pos -= total;
+    if (pos < -2*total) pos += total;
     container.style.transform = `translateX(${pos}px)`;
   });
-
   window.addEventListener('mouseup', () => {
     drag = false;
     wrapper.style.cursor = '';
@@ -46,27 +46,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Arrow controls
   document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     pos += w;
-    if (pos > -w)        pos -= total;
-    if (pos < -total*2)  pos += total;
+    if (pos > 0)       pos -= total;
+    if (pos < -2*total) pos += total;
     container.style.transform = `translateX(${pos}px)`;
   });
   document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
     pos -= w;
-    if (pos > -w)        pos -= total;
-    if (pos < -total*2)  pos += total;
+    if (pos > 0)       pos -= total;
+    if (pos < -2*total) pos += total;
     container.style.transform = `translateX(${pos}px)`;
   });
 
   // Inertia + continuous wrap
-  (function loop(){
+  (function loop() {
     if (!drag) {
       pos += vel;
       vel *= 0.9;
+      if (pos > 0)       pos -= total;
+      if (pos < -2*total) pos += total;
+      container.style.transform = `translateX(${pos}px)`;
     }
-    // always wrap, even if dragging stopped mid‐wrap
-    if (pos > -w)        pos -= total;
-    if (pos < -total*2)  pos += total;
-    container.style.transform = `translateX(${pos}px)`;
     requestAnimationFrame(loop);
   })();
 });
