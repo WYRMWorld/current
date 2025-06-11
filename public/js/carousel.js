@@ -1,48 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.track-scroll');
   const originals = Array.from(container.children);
-  const count     = originals.length;
-
-  // Measure one “slide” width (item + right-margin)
-  const style   = getComputedStyle(originals[0]);
+  const count = originals.length;
+  const style = getComputedStyle(originals[0]);
   const marginR = parseInt(style.marginRight);
-  const slideW  = originals[0].offsetWidth + marginR;
-  const totalW  = slideW * count;
+  const slideW = originals[0].offsetWidth + marginR;
 
-  // 1) Clone originals before & after (keeping forward order)
-  originals.slice().reverse().forEach(item => {
-    container.insertBefore(item.cloneNode(true), container.firstChild);
-  });
-  originals.forEach(item => {
-    container.appendChild(item.cloneNode(true));
-  });
+  // Clone originals before and after
+  originals.forEach(item => container.appendChild(item.cloneNode(true)));
+  originals.slice().reverse().forEach(item => container.insertBefore(item.cloneNode(true), container.firstChild));
 
-  // 2) Jump to the real start (so you’re in the middle set)
-  container.scrollLeft = totalW;
+  // Jump to the first original (not the clones)
+  container.scrollLeft = slideW * count;
 
-  // 3) Wrap thresholds: once you drift too far into a clone set,
-  //    jump you back by +/- totalW so that the loop is infinite
-  const minScroll = totalW - slideW;
-  const maxScroll = totalW * 2 + slideW;
+  function getScrollRange() {
+    return {
+      start: slideW * count,
+      end: slideW * count * 2,
+    };
+  }
+
   container.addEventListener('scroll', () => {
-    if (container.scrollLeft < minScroll) {
-      container.scrollLeft += totalW;
-    } else if (container.scrollLeft > maxScroll) {
-      container.scrollLeft -= totalW;
+    const { start, end } = getScrollRange();
+    if (container.scrollLeft < start) {
+      // Too far left; jump to the originals (from right clones)
+      container.scrollLeft += slideW * count;
+    } else if (container.scrollLeft >= end) {
+      // Too far right; jump to the originals (from left clones)
+      container.scrollLeft -= slideW * count;
     }
   });
 
-  // 4) DRAG-TO-SCROLL (correct clientX offsets)
-  let isDown      = false;
-  let startX      = 0;
-  let scrollStart = 0;
-
+  // Drag-to-scroll (mouse)
+  let isDown = false, startX = 0, scrollStart = 0;
   container.style.cursor = 'grab';
-
   container.addEventListener('mousedown', e => {
-    isDown       = true;
-    startX       = e.clientX;
-    scrollStart  = container.scrollLeft;
+    isDown = true;
+    startX = e.clientX;
+    scrollStart = container.scrollLeft;
     container.style.cursor = 'grabbing';
     e.preventDefault();
   });
@@ -60,13 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     container.scrollLeft = scrollStart - walk;
   });
 
-  // 5) Arrow controls remain unchanged
+  // Arrow controls
   document.querySelector('.carousel-arrow.left')
-    .addEventListener('click', () => {
-      container.scrollBy({ left: -slideW, behavior: 'smooth' });
-    });
+    .addEventListener('click', () => container.scrollBy({ left: -slideW, behavior: 'smooth' }));
   document.querySelector('.carousel-arrow.right')
-    .addEventListener('click', () => {
-      container.scrollBy({ left:  slideW, behavior: 'smooth' });
-    });
+    .addEventListener('click', () => container.scrollBy({ left: slideW, behavior: 'smooth' }));
 });
