@@ -2,7 +2,6 @@
   --bg-color: #0a0a0a;
   --text-color: #eee;
   --accent-green: #00ff9e;
-  --accent-pink: #ff1493;
   --card-bg: #111;
 }
 
@@ -14,68 +13,32 @@ body {
   overflow-x: hidden;
 }
 
-/* …other global styles… */
+/* Navbar buttons, other styles… */
 
-/* Carousel wrapper */
-.carousel-wrapper {
-  position: relative;
-  margin: 1rem 0;
-}
-
-/* Arrow buttons */
-.carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
+.btn {
   color: var(--accent-green);
-  border: none;
-  font-size: 2rem;
-  padding: 0.5rem;
-  cursor: pointer;
-  z-index: 2;
+  text-decoration: none;
+  margin: 0 .5rem;
 }
-.carousel-arrow.left  { left: 0.5rem; }
-.carousel-arrow.right { right: 0.5rem; }
 
-/* Scroll container */
-.track-scroll {
-  display: flex;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* Splide overrides for fixed sizing */
+.splide__track {
+  overflow: visible;
 }
-.track-scroll::-webkit-scrollbar { display: none; }
 
-/* Track items */
-.track-item {
-  flex: 0 0 300px !important;
-  width: 300px !important;
-  height: 300px !important;
+.splide__slide.track-item {
+  width: 300px;
+  height: 300px;
+  flex: 0 0 auto;
   margin-right: 1rem;
-  position: relative;
+  background: var(--card-bg);
+  border-radius: 8px;
   overflow: hidden;
+  position: relative;
 }
-.track-item iframe {
-  width: 300px !important;
-  min-width: 300px !important;
-  max-width: 300px !important;
-  height: 300px !important;
-  min-height: 300px !important;
-  max-height: 300px !important;
+
+.splide__slide.track-item iframe {
+  width: 100% !important;
+  height: 100% !important;
   display: block;
 }
-
-/* Transparent overlay to catch drags anywhere */
-.drag-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  cursor: inherit; /* will follow the container’s cursor setting */
-}
-
-/* iframe styling left untouched */
