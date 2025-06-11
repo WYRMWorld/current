@@ -1,15 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
-  new Splide('.splide', {
+  new Splide('#splide', {
     type      : 'loop',
-    perPage   : 3,          // adjust how many are visible
+    perPage   : 4,          // adjust # visible
     perMove   : 1,
     gap       : '1rem',
-    padding   : 0,
     drag      : true,
     arrows    : true,
     pagination: false,
     speed     : 600,
-    snap      : false,      // free-drag, no snap lock
+    snap      : false,      // free drag
     focus     : 'center',
   }).mount();
 });
