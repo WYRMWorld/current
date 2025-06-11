@@ -29,6 +29,8 @@ h2 {
 .carousel {
   background: var(--bg-color);
   padding: 2rem 0;
+  /* hide any native scrollbars */
+  overflow: hidden;
 }
 
 /* Each cell styled as a square tile */
@@ -48,4 +50,13 @@ h2 {
   height: 100% !important;
   border: none;
   pointer-events: none;
+}
+
+/* Hide Flickity’s scrollbar */
+.carousel .flickity-viewport {
+  overflow: hidden !important;
+  scrollbar-width: none;         /* Firefox */
+}
+.carousel .flickity-viewport::-webkit-scrollbar {
+  display: none;                 /* Safari & Chrome */
 }
