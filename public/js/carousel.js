@@ -1,122 +1,63 @@
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.track-scroll');
-  const iframes = container.querySelectorAll('iframe');
-  let loadedCount = 0;
+  const leftArrow = document.querySelector('.carousel-arrow.left');
+  const rightArrow = document.querySelector('.carousel-arrow.right');
+  let isDown = false, startX = 0, scrollStart = 0;
 
-  if (iframes.length === 0) {
-    // No iframes, init immediately
-    waitForStableTrackItems(initCarousel);
-  } else {
-    // Wait for all iframes to load first
-    iframes.forEach(iframe => {
-      iframe.addEventListener('load', () => {
-        loadedCount++;
-        if (loadedCount === iframes.length) {
-          waitForStableTrackItems(initCarousel);
-        }
-      });
-    });
-  }
+  // Force scroll to 0 at start
+  container.scrollLeft = 0;
 
-  function waitForStableTrackItems(callback) {
-    const trackItem = container.querySelector('.track-item');
-    let lastWidth = trackItem.offsetWidth;
-    let lastHeight = trackItem.offsetHeight;
-    let stableCount = 0;
-    const requiredStableFrames = 20; // 1 second of stability (20 x 50ms)
-    const maxWait = 10000; // Max 10 seconds to avoid infinite wait
-    let waited = 0;
-
-    function poll() {
-      let curWidth = trackItem.offsetWidth;
-      let curHeight = trackItem.offsetHeight;
-      if (curWidth === lastWidth && curHeight === lastHeight) {
-        stableCount++;
-        if (stableCount >= requiredStableFrames) {
-          callback();
-          return;
-        }
-      } else {
-        stableCount = 0;
-        lastWidth = curWidth;
-        lastHeight = curHeight;
-      }
-      waited += 50;
-      if (waited >= maxWait) {
-        // Failsafe: run even if not stable after 10s
-        callback();
-        return;
-      }
-      setTimeout(poll, 50);
-    }
-    poll();
-  }
-
-  function initCarousel() {
-    const originals = Array.from(container.children);
-    const count = originals.length;
-    const style = getComputedStyle(originals[0]);
-    const marginR = parseInt(style.marginRight);
-    const slideW = originals[0].offsetWidth + marginR;
-
-    // Clone originals before and after
-    originals.forEach(item => container.appendChild(item.cloneNode(true)));
-    originals.slice().reverse().forEach(item => container.insertBefore(item.cloneNode(true), container.firstChild));
-
-    // Jump to the first original (not the clones)
-    container.scrollLeft = slideW * count;
-
-    function getScrollRange() {
-      return {
-        start: slideW * count,
-        end: slideW * count * 2,
-      };
-    }
-
-    // Prevent wrap logic from firing repeatedly
-    let isAdjusting = false;
-    container.addEventListener('scroll', () => {
-      if (isAdjusting) return;
-      const { start, end } = getScrollRange();
-      if (container.scrollLeft < start) {
-        isAdjusting = true;
-        container.scrollLeft += slideW * count;
-        setTimeout(() => { isAdjusting = false; }, 10);
-      } else if (container.scrollLeft >= end) {
-        isAdjusting = true;
-        container.scrollLeft -= slideW * count;
-        setTimeout(() => { isAdjusting = false; }, 10);
-      }
-    });
-
-    // Drag-to-scroll (mouse)
-    let isDown = false, startX = 0, scrollStart = 0;
+  // Drag-to-scroll
+  container.style.cursor = 'grab';
+  container.addEventListener('mousedown', e => {
+    isDown = true;
+    startX = e.clientX;
+    scrollStart = container.scrollLeft;
+    container.style.cursor = 'grabbing';
+    e.preventDefault();
+  });
+  window.addEventListener('mouseup', () => {
+    isDown = false;
     container.style.cursor = 'grab';
-    container.addEventListener('mousedown', e => {
-      isDown = true;
-      startX = e.clientX;
-      scrollStart = container.scrollLeft;
-      container.style.cursor = 'grabbing';
-      e.preventDefault();
-    });
-    window.addEventListener('mouseup', () => {
-      isDown = false;
-      container.style.cursor = 'grab';
-    });
-    container.addEventListener('mouseleave', () => {
-      isDown = false;
-      container.style.cursor = 'grab';
-    });
-    container.addEventListener('mousemove', e => {
-      if (!isDown) return;
-      const walk = e.clientX - startX;
-      container.scrollLeft = scrollStart - walk;
-    });
+  });
+  container.addEventListener('mouseleave', () => {
+    isDown = false;
+    container.style.cursor = 'grab';
+  });
+  container.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    const walk = e.clientX - startX;
+    container.scrollLeft = scrollStart - walk;
+  });
 
-    // Arrow controls
-    document.querySelector('.carousel-arrow.left')
-      .addEventListener('click', () => container.scrollBy({ left: -slideW, behavior: 'smooth' }));
-    document.querySelector('.carousel-arrow.right')
-      .addEventListener('click', () => container.scrollBy({ left: slideW, behavior: 'smooth' }));
+  // Infinite loop by rotating children when scrolled too far
+  const itemWidth = 300 + 16; // match your CSS (width + margin-right)
+  function rotateLeft() {
+    // If scrolled left past threshold, move last to front
+    if (container.scrollLeft < itemWidth / 2) {
+      container.insertBefore(container.lastElementChild, container.firstElementChild);
+      container.scrollLeft += itemWidth;
+    }
   }
+  function rotateRight() {
+    // If scrolled right past threshold, move first to end
+    if (container.scrollLeft > itemWidth * (container.children.length - 2)) {
+      container.appendChild(container.firstElementChild);
+      container.scrollLeft -= itemWidth;
+    }
+  }
+  container.addEventListener('scroll', () => {
+    rotateLeft();
+    rotateRight();
+  });
+
+  // Arrow controls
+  leftArrow.addEventListener('click', () => {
+    container.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+    setTimeout(rotateLeft, 500);
+  });
+  rightArrow.addEventListener('click', () => {
+    container.scrollBy({ left: itemWidth, behavior: 'smooth' });
+    setTimeout(rotateRight, 500);
+  });
 });
