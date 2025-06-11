@@ -171,7 +171,14 @@ nav .btn {
   overflow-x: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  /* hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.track-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .track-item {
   flex: 0 0 300px;
   width: 300px;
@@ -182,11 +189,3 @@ nav .btn {
   overflow: hidden;
 }
 
-/* Hide native scrollbar */
-.track-scroll::-webkit-scrollbar {
-  display: none;
-}
-.track-scroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
