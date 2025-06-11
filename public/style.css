@@ -151,7 +151,6 @@ nav .btn {
   margin: 1rem 0;
 }
 
-/* Arrow buttons */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -164,24 +163,16 @@ nav .btn {
   padding: 0.5rem;
   z-index: 3;
 }
-.carousel-arrow.left {
-  left: 0.5rem;
-}
-.carousel-arrow.right {
-  right: 0.5rem;
-}
+.carousel-arrow.left  { left: 0.5rem;  }
+.carousel-arrow.right { right: 0.5rem; }
 
-/* Scroll container */
 .track-scroll {
   display: flex;
-  overflow: hidden;
-  padding: 1rem;
-  cursor: grab;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
-
-/* Track item squares */
 .track-item {
-  position: relative;
   flex: 0 0 300px;
   width: 300px;
   height: 300px;
@@ -190,6 +181,11 @@ nav .btn {
   border-radius: 8px;
   overflow: hidden;
 }
+
+/* Hide native scrollbar */
+.track-scroll::-webkit-scrollbar { display: none; }
+.track-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
 
 /* Overlay for dragging */
 .drag-overlay {
