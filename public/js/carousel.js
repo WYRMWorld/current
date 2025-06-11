@@ -1,7 +1,8 @@
 const container = document.querySelector('.track-scroll');
 const slides = Array.from(container.children);
 slides.forEach(s => { container.append(s.cloneNode(true)); container.prepend(s.cloneNode(true)); });
-let pos = -container.offsetWidth, vel = 0, drag = false, startX = 0;
+let pos = 0;  // start with the first slide fully in view, 
+ let vel = 0, dragging = false, startX = 0;
 container.style.transform = `translateX(${pos}px)`;
 (function loop(){
   if(!drag){ pos += vel; vel *= 0.9;
