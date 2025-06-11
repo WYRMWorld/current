@@ -1,54 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const container  = document.querySelector('.track-scroll');
-  const slides     = Array.from(container.children);
-  const N          = slides.length;
-  const style      = getComputedStyle(slides[0]);
-  const slideWidth = slides[0].offsetWidth + parseInt(style.marginRight);
-  const totalW     = slideWidth * N;
+  const container = document.querySelector('.track-scroll');
+  const slides    = Array.from(container.children);
+  const N         = slides.length;
+  const style     = getComputedStyle(slides[0]);
+  const slideW    = slides[0].offsetWidth + parseInt(style.marginRight);
+  const totalW    = slideW * N;
 
-  // Clone slides both ends
+  // Clone for infinite loop
   slides.forEach(s => container.append(s.cloneNode(true)));
   slides.forEach(s => container.insertBefore(s.cloneNode(true), container.firstChild));
 
-  // Start in the middle
+  // Center start
   container.scrollLeft = totalW;
 
-  // Wrap when crossing half-way into clones
+  // Wrap logic
   container.addEventListener('scroll', () => {
-    const sl = container.scrollLeft;
-    if (sl < totalW * 0.5)       container.scrollLeft = sl + totalW;
-    if (sl > totalW * 1.5)       container.scrollLeft = sl - totalW;
+    if (container.scrollLeft <= slideW * 0.5) {
+      container.scrollLeft += totalW;
+    } else if (container.scrollLeft >= totalW * 1.5) {
+      container.scrollLeft -= totalW;
+    }
   });
 
-  // Drag via the overlays
-  let isDown = false, startX = 0, scrollStart = 0;
-  document.querySelectorAll('.drag-overlay').forEach(ov => {
-    ov.addEventListener('mousedown', e => {
-      isDown     = true;
-      startX     = e.pageX - container.offsetLeft;
-      scrollStart = container.scrollLeft;
-      container.style.cursor = 'grabbing';
-      e.preventDefault();
-    });
+  // Native drag
+  let isDown     = false;
+  let startX     = 0;
+  let scrollLeft = 0;
+  const doDrag = e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x   = e.pageX - container.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    container.scrollLeft = scrollLeft - walk;
+  };
+  container.addEventListener('mousedown', e => {
+    isDown = true;
+    startX = e.pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+    container.style.cursor = 'grabbing';
   });
-
   window.addEventListener('mouseup', () => {
     isDown = false;
     container.style.cursor = '';
   });
+  window.addEventListener('mousemove', doDrag);
 
-  window.addEventListener('mousemove', e => {
-    if (!isDown) return;
-    const x = e.pageX - container.offsetLeft;
-    const walk = x - startX;
-    container.scrollLeft = scrollStart - walk;
-  });
-
-  // Arrow clicks
+  // Arrow controls
   document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
-    container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+    container.scrollBy({ left: -slideW, behavior: 'smooth' });
   });
   document.querySelector('.carousel-arrow.right').addEventListener('click', () => {
-    container.scrollBy({ left: slideWidth, behavior: 'smooth' });
+    container.scrollBy({ left: slideW, behavior: 'smooth' });
   });
 });
