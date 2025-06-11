@@ -1,18 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.track-scroll');
-  const slides = Array.from(container.children);
-  const N = slides.length;
-  const slideWidth = slides[0].offsetWidth + parseInt(getComputedStyle(slides[0]).marginRight);
+  const slides    = Array.from(container.children);
+  const N         = slides.length;
+  const style     = getComputedStyle(slides[0]);
+  const slideWidth = slides[0].offsetWidth + parseInt(style.marginRight);
   const totalWidth = slideWidth * N;
 
-  // duplicate for infinite effect
+  // 1) Clone slides before & after
   slides.forEach(slide => container.append(slide.cloneNode(true)));
   slides.forEach(slide => container.insertBefore(slide.cloneNode(true), container.firstChild));
 
-  // center on original slides
+  // 2) Center on the original slides
   container.scrollLeft = totalWidth;
 
-  // wrap on scroll
+  // 3) Wrap on scroll
   container.addEventListener('scroll', () => {
     if (container.scrollLeft <= 0) {
       container.scrollLeft += totalWidth;
@@ -21,7 +22,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // arrow buttons
+  // 4) Native drag-to-scroll
+  let isDown     = false;
+  let startX     = 0;
+  let scrollLeft = 0;
+
+  container.addEventListener('mousedown', e => {
+    isDown     = true;
+    startX     = e.pageX - container.offsetLeft;
+    scrollLeft = container.scrollLeft;
+    container.style.cursor = 'grabbing';
+  });
+
+  container.addEventListener('mouseleave', () => {
+    isDown = false;
+    container.style.cursor = '';
+  });
+
+  container.addEventListener('mouseup', () => {
+    isDown = false;
+    container.style.cursor = '';
+  });
+
+  container.addEventListener('mousemove', e => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x    = e.pageX - container.offsetLeft;
+    const walk = x - startX;
+    container.scrollLeft = scrollLeft - walk;
+  });
+
+  // 5) Arrow buttons
   document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
   });
