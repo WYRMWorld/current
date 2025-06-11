@@ -27,6 +27,7 @@ nav, .flicker-title, .hero, .features {
   z-index: 1;
 }
 
+/* Navigation */
 nav {
   background: var(--card-bg);
   padding: 1rem;
@@ -39,6 +40,7 @@ nav .btn {
   font-weight: bold;
 }
 
+/* Flicker title */
 .flicker-title {
   font-size: 4rem;
   text-transform: uppercase;
@@ -52,6 +54,7 @@ nav .btn {
   20%,24%,55% { opacity:0.2; }
 }
 
+/* Hero buttons */
 .hero {
   text-align: center;
   padding: 2rem;
@@ -70,6 +73,7 @@ nav .btn {
   box-shadow: 0 0 10px var(--accent-pink);
 }
 
+/* Features */
 .features {
   display: flex;
   justify-content: space-around;
@@ -88,6 +92,7 @@ nav .btn {
   font-size: 0.9rem;
 }
 
+/* Form */
 .form-container {
   max-width: 600px;
   margin: 2rem auto;
@@ -114,7 +119,6 @@ nav .btn {
   border: 1px solid #333;
   padding: 1rem;
 }
-
 .btn-primary {
   margin: 1rem 0;
   padding: 0.75rem;
@@ -124,6 +128,7 @@ nav .btn {
   cursor: pointer;
 }
 
+/* Queue table */
 .queue-container {
   max-height: 300px;
   overflow-y: auto;
@@ -145,12 +150,13 @@ nav .btn {
   background: var(--card-bg);
 }
 
-/* Carousel wrapper with arrow buttons */
+/* Carousel wrapper */
 .carousel-wrapper {
   position: relative;
   margin: 1rem 0;
 }
 
+/* Arrow buttons */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -163,15 +169,19 @@ nav .btn {
   padding: 0.5rem;
   z-index: 3;
 }
-.carousel-arrow.left  { left: 0.5rem;  }
-.carousel-arrow.right { right: 0.5rem; }
+.carousel-arrow.left {
+  left: 0.5rem;
+}
+.carousel-arrow.right {
+  right: 0.5rem;
+}
 
+/* Scroll container */
 .track-scroll {
   display: flex;
   overflow-x: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  /* hide scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -179,6 +189,7 @@ nav .btn {
   display: none;
 }
 
+/* Track items */
 .track-item {
   flex: 0 0 300px;
   width: 300px;
@@ -188,4 +199,3 @@ nav .btn {
   border-radius: 8px;
   overflow: hidden;
 }
-
