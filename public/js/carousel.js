@@ -1,6 +1,7 @@
 const container = document.querySelector('.track-scroll');
 const slides = Array.from(container.children);
 
+// Clone for infinite loop
 slides.forEach(slide => {
   container.appendChild(slide.cloneNode(true));
   container.insertBefore(slide.cloneNode(true), container.firstChild);
