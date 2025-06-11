@@ -2,46 +2,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.track-scroll');
   const originals = Array.from(container.children);
   const count     = originals.length;
-  const style     = getComputedStyle(originals[0]);
-  const marginR   = parseInt(style.marginRight);
-  const slideW    = originals[0].offsetWidth + marginR;
-  const totalW    = slideW * count;
 
-  // 1) Clone BEFORE originals in correct order
-  originals.slice().reverse().forEach(slide => {
-    container.insertBefore(slide.cloneNode(true), container.firstChild);
+  // Measure one “slide” width (item + right-margin)
+  const style   = getComputedStyle(originals[0]);
+  const marginR = parseInt(style.marginRight);
+  const slideW  = originals[0].offsetWidth + marginR;
+  const totalW  = slideW * count;
+
+  // 1) Clone originals before & after (keeping forward order)
+  originals.slice().reverse().forEach(item => {
+    container.insertBefore(item.cloneNode(true), container.firstChild);
   });
-  // 2) Clone AFTER originals
-  originals.forEach(slide => {
-    container.appendChild(slide.cloneNode(true));
+  originals.forEach(item => {
+    container.appendChild(item.cloneNode(true));
   });
 
-  // 3) Jump to the “real” start
+  // 2) Jump to the real start (so you’re in the middle set)
   container.scrollLeft = totalW;
 
-  // 4) Wrap-around without snapping
+  // 3) Wrap thresholds: once you drift too far into a clone set,
+  //    jump you back by +/- totalW so that the loop is infinite
+  const minScroll = totalW - slideW;
+  const maxScroll = totalW * 2 + slideW;
   container.addEventListener('scroll', () => {
-    if (container.scrollLeft <= slideW) {
+    if (container.scrollLeft < minScroll) {
       container.scrollLeft += totalW;
-    }
-    else if (container.scrollLeft >= totalW * 2) {
+    } else if (container.scrollLeft > maxScroll) {
       container.scrollLeft -= totalW;
     }
   });
 
-  // 5) Drag-to-scroll setup
-  let isDown    = false;
-  let startX    = 0;
+  // 4) DRAG-TO-SCROLL (correct clientX offsets)
+  let isDown      = false;
+  let startX      = 0;
   let scrollStart = 0;
 
-  // set initial cursor style
   container.style.cursor = 'grab';
 
-  container.addEventListener('mousedown', (e) => {
-    isDown = true;
-    startX = e.pageX - container.offsetLeft;
-    scrollStart = container.scrollLeft;
+  container.addEventListener('mousedown', e => {
+    isDown       = true;
+    startX       = e.clientX;
+    scrollStart  = container.scrollLeft;
     container.style.cursor = 'grabbing';
+    e.preventDefault();
   });
   window.addEventListener('mouseup', () => {
     isDown = false;
@@ -51,15 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
     isDown = false;
     container.style.cursor = 'grab';
   });
-  container.addEventListener('mousemove', (e) => {
+  container.addEventListener('mousemove', e => {
     if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - container.offsetLeft;
-    const walk = x - startX;
+    const walk = e.clientX - startX;
     container.scrollLeft = scrollStart - walk;
   });
 
-  // 6) Arrow controls
+  // 5) Arrow controls remain unchanged
   document.querySelector('.carousel-arrow.left')
     .addEventListener('click', () => {
       container.scrollBy({ left: -slideW, behavior: 'smooth' });
