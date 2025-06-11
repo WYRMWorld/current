@@ -1,79 +1,72 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const track     = document.querySelector('.track');
-  const items     = Array.from(track.children);
-  const count     = items.length;
-  const itemW     = items[0].offsetWidth + parseInt(getComputedStyle(items[0]).marginRight);
-  let pos         = -count * itemW;   // start in middle
-  let isDown      = false;
-  let startX      = 0;
-  let startPos    = 0;
-  let rafId;
+  const track    = document.querySelector('.track');
+  const items    = Array.from(track.children);
+  const count    = items.length;
+  const style    = getComputedStyle(items[0]);
+  const itemW    = items[0].offsetWidth + parseInt(style.marginRight);
+  let pos        = -count * itemW;   // start in the middle
+  let isDown     = false, startX = 0, startPos = 0, raf;
 
-  // 1) Clone items on both ends
-  const cloneBefore = items.map(el => el.cloneNode(true));
-  const cloneAfter  = items.map(el => el.cloneNode(true));
-  cloneBefore.reverse().forEach(el => track.insertBefore(el, track.firstChild));
-  cloneAfter.forEach(el => track.appendChild(el));
+  // 1) Clone both ends
+  const before = items.map(i => i.cloneNode(true)).reverse();
+  const after  = items.map(i => i.cloneNode(true));
+  before.forEach(i => track.insertBefore(i, track.firstChild));
+  after.forEach(i => track.appendChild(i));
 
-  // 2) Set initial position
+  // 2) Apply initial transform
   track.style.transform = `translateX(${pos}px)`;
 
-  // 3) Wrap function
+  // 3) Wrap logic
   function wrap() {
-    if (pos > -itemW) {
-      pos -= count * itemW;
-    } else if (pos < -count * itemW * 2) {
-      pos += count * itemW;
-    }
-    track.style.transform = `translateX(${pos}px)`;
+    if (pos > -itemW)           pos -= count * itemW;
+    else if (pos < -count * itemW * 2) pos += count * itemW;
   }
 
-  // 4) Animation frame loop for smooth drag
-  function animate() {
+  // 4) Animation frame loop
+  function loop() {
     track.style.transform = `translateX(${pos}px)`;
     wrap();
-    rafId = requestAnimationFrame(animate);
+    raf = requestAnimationFrame(loop);
   }
 
-  // 5) Pointer events for drag
+  // 5) Pointer drag
   track.addEventListener('pointerdown', e => {
-    isDown   = true;
-    startX   = e.clientX;
+    isDown = true;
+    startX = e.clientX;
     startPos = pos;
-    cancelAnimationFrame(rafId);
+    cancelAnimationFrame(raf);
   });
   window.addEventListener('pointerup', () => {
     if (!isDown) return;
     isDown = false;
-    animate();  // resume wrapping & position
+    loop();
   });
   track.addEventListener('pointermove', e => {
     if (!isDown) return;
-    const dx = e.clientX - startX;
-    pos = startPos + dx;
+    pos = startPos + (e.clientX - startX);
     track.style.transform = `translateX(${pos}px)`;
   });
 
-  // 6) Arrow Controls
-  document.querySelector('.arrow.left').addEventListener('click', () => {
+  // 6) Arrow controls
+  document.querySelector('.arrow.left').onclick = () => {
     pos += itemW;
-    track.style.transition = 'transform 0.3s';
+    track.style.transition = 'transform .3s';
     track.style.transform = `translateX(${pos}px)`;
     setTimeout(() => {
       track.style.transition = '';
       wrap();
     }, 300);
-  });
-  document.querySelector('.arrow.right').addEventListener('click', () => {
+  };
+  document.querySelector('.arrow.right').onclick = () => {
     pos -= itemW;
-    track.style.transition = 'transform 0.3s';
+    track.style.transition = 'transform .3s';
     track.style.transform = `translateX(${pos}px)`;
     setTimeout(() => {
       track.style.transition = '';
       wrap();
     }, 300);
-  });
+  };
 
-  // 7) Kick off the loop
-  animate();
+  // 7) Start looping
+  loop();
 });
