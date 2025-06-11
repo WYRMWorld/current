@@ -3,16 +3,54 @@ document.addEventListener('DOMContentLoaded', () => {
   const iframes = container.querySelectorAll('iframe');
   let loadedCount = 0;
 
-  // Wait for all iframes to load
-  iframes.forEach(iframe => {
-    iframe.addEventListener('load', () => {
-      loadedCount++;
-      if (loadedCount === iframes.length) {
-        // Wait 4 seconds after all iframes load, then initialize carousel
-        setTimeout(initCarousel, 4000);
-      }
+  if (iframes.length === 0) {
+    // No iframes, init immediately
+    waitForStableTrackItems(initCarousel);
+  } else {
+    // Wait for all iframes to load first
+    iframes.forEach(iframe => {
+      iframe.addEventListener('load', () => {
+        loadedCount++;
+        if (loadedCount === iframes.length) {
+          waitForStableTrackItems(initCarousel);
+        }
+      });
     });
-  });
+  }
+
+  function waitForStableTrackItems(callback) {
+    const trackItem = container.querySelector('.track-item');
+    let lastWidth = trackItem.offsetWidth;
+    let lastHeight = trackItem.offsetHeight;
+    let stableCount = 0;
+    const requiredStableFrames = 20; // 1 second of stability (20 x 50ms)
+    const maxWait = 10000; // Max 10 seconds to avoid infinite wait
+    let waited = 0;
+
+    function poll() {
+      let curWidth = trackItem.offsetWidth;
+      let curHeight = trackItem.offsetHeight;
+      if (curWidth === lastWidth && curHeight === lastHeight) {
+        stableCount++;
+        if (stableCount >= requiredStableFrames) {
+          callback();
+          return;
+        }
+      } else {
+        stableCount = 0;
+        lastWidth = curWidth;
+        lastHeight = curHeight;
+      }
+      waited += 50;
+      if (waited >= maxWait) {
+        // Failsafe: run even if not stable after 10s
+        callback();
+        return;
+      }
+      setTimeout(poll, 50);
+    }
+    poll();
+  }
 
   function initCarousel() {
     const originals = Array.from(container.children);
