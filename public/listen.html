@@ -3,22 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self' https://w.soundcloud.com https://api.soundcloud.com;
-          script-src 'self' https://w.soundcloud.com 'unsafe-eval' 'unsafe-inline';
-          frame-src https://w.soundcloud.com;
-          connect-src https://api.soundcloud.com;
-          style-src 'self' 'unsafe-inline';
-        ">
-
   <title>Listen</title>
   <link rel="stylesheet" href="style.css">
 
- <script src="https://w.soundcloud.com/player/api.js" defer></script>
-
+  <!-- CSP override for SoundCloud -->
+  <meta http-equiv="Content-Security-Policy" content="…">
+  <!-- SoundCloud widget loader -->
+  <script src="https://w.soundcloud.com/player/api.js" defer></script>
 </head>
+
 <body>
   <nav>
     <a href="index.html" class="btn">Home</a>
