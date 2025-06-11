@@ -159,3 +159,18 @@ nav .btn {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+.track-item {
+  position: relative;
+}
+.drag-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  cursor: grab;
+  z-index: 2;
+  /* transparent so you still see the iframe below */
+}
+/* While dragging, disable overlay so underlying iframe clicks can work again */
+.track-item.overlay-active .drag-overlay {
+  pointer-events: none;
+}

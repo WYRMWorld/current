@@ -1,17 +1,51 @@
 const container = document.querySelector('.track-scroll');
-const slides = Array.from(container.children);
-slides.forEach(s => { container.append(s.cloneNode(true)); container.prepend(s.cloneNode(true)); });
-let pos = 0;  // start with the first slide fully in view, 
- let vel = 0, dragging = false, startX = 0;
+const slides    = Array.from(container.children);
+
+// clone for infinite loop
+slides.forEach(slide => {
+  container.appendChild(slide.cloneNode(true));
+  container.insertBefore(slide.cloneNode(true), container.firstChild);
+});
+
+let pos = 0, vel = 0, drag = false, startX = 0;
+
+// set initial position
 container.style.transform = `translateX(${pos}px)`;
+
+// overlay elements
+const overlays = document.querySelectorAll('.drag-overlay');
+
+overlays.forEach((ov) => {
+  ov.addEventListener('mousedown', e => {
+    drag = true;
+    startX = e.clientX;
+    // deactivate overlays so iframes become clickable mid-drag
+    overlays.forEach(o => o.parentElement.classList.add('overlay-active'));
+  });
+});
+
+window.addEventListener('mousemove', e => {
+  if (!drag) return;
+  const dx = e.clientX - startX;
+  startX = e.clientX;
+  pos += dx;
+  vel = dx;
+});
+
+window.addEventListener('mouseup', e => {
+  drag = false;
+  overlays.forEach(o => o.parentElement.classList.remove('overlay-active'));
+});
+
 (function loop(){
-  if(!drag){ pos += vel; vel *= 0.9;
-    const w = slides[0].offsetWidth, total = w * slides.length;
-    if(pos > -w) pos -= total; if(pos < -total*2) pos += total;
+  if (!drag) {
+    pos += vel;
+    vel *= 0.9;
+    const w     = slides[0].offsetWidth;
+    const total = w * slides.length;
+    if (pos > -w)        pos -= total;
+    if (pos < -total*2)  pos += total;
   }
   container.style.transform = `translateX(${pos}px)`;
   requestAnimationFrame(loop);
 })();
-container.addEventListener('mousedown', e => { drag = true; startX = e.clientX; });
-window.addEventListener('mousemove', e => { if(!drag) return; const dx = e.clientX - startX; startX = e.clientX; pos += dx; vel = dx; });
-window.addEventListener('mouseup', () => { drag = false; });
