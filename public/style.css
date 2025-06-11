@@ -1,47 +1,74 @@
 :root {
-  --bg-color: #0a0a0a;
-  --text-color: #eee;
-  --accent-green: #00ff9e;
-  --card-bg: #111;
+  --bg: #0a0a0a;
+  --fg: #eee;
+  --green: #00ff9e;
+  --card: #111;
 }
 
 body {
-  background: var(--bg-color);
-  color: var(--text-color);
-  font-family: 'Inter', sans-serif;
   margin: 0;
-  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Inter', sans-serif;
 }
 
-/* Navbar buttons */
+nav { padding: 1rem; }
 .btn {
-  color: var(--accent-green);
-  text-decoration: none;
-  margin: 0 .5rem;
-}
-
-/* Splide overrides for fixed sizing */
-.splide {
-  width: 100%;
-  padding: 1rem 0;
-}
-
-.splide__track {
-  /* let Splide manage overflow */
-}
-
-.splide__slide.track-item {
-  width: 300px !important;
-  height: 300px !important;
-  flex: 0 0 auto;
+  color: var(--green);
   margin-right: 1rem;
-  background: var(--card-bg);
-  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* Carousel Base */
+.carousel {
+  position: relative;
+  margin: 2rem auto;
+  max-width: 100%;
   overflow: hidden;
 }
 
-.splide__slide.track-item iframe {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
+.viewport {
+  overflow: hidden;
 }
+
+.track {
+  display: flex;
+  will-change: transform;
+}
+
+.item {
+  flex: 0 0 300px;
+  width: 300px;
+  height: 300px;
+  margin-right: 1rem;
+  background: var(--card);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+}
+
+.item:active { cursor: grabbing; }
+
+.item iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Arrows */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: var(--green);
+  border: none;
+  font-size: 2rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.arrow.left  { left: 0.5rem; }
+.arrow.right { right: 0.5rem; }
