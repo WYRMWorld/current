@@ -13,8 +13,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Navbar buttons, other styles… */
-
+/* Navbar buttons */
 .btn {
   color: var(--accent-green);
   text-decoration: none;
@@ -22,19 +21,23 @@ body {
 }
 
 /* Splide overrides for fixed sizing */
+.splide {
+  width: 100%;
+  padding: 1rem 0;
+}
+
 .splide__track {
-  overflow: visible;
+  /* let Splide manage overflow */
 }
 
 .splide__slide.track-item {
-  width: 300px;
-  height: 300px;
+  width: 300px !important;
+  height: 300px !important;
   flex: 0 0 auto;
   margin-right: 1rem;
   background: var(--card-bg);
   border-radius: 8px;
   overflow: hidden;
-  position: relative;
 }
 
 .splide__slide.track-item iframe {
