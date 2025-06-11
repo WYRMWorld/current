@@ -1,29 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.querySelector('.track-scroll');
-  const slides    = Array.from(container.children);
-  const N         = slides.length;
+  const slides = Array.from(container.children);
+  const N = slides.length;
   const slideWidth = slides[0].offsetWidth + parseInt(getComputedStyle(slides[0]).marginRight);
-  
-  // Clone slides before & after
-  slides.forEach(s => {
-    container.append(s.cloneNode(true));
-    container.prepend(s.cloneNode(true));
-  });
+  const totalWidth = slideWidth * N;
 
-  const totalSlides = container.children.length;
-  const scrollCenter = N * slideWidth;
-  container.scrollLeft = scrollCenter;
+  // duplicate for infinite effect
+  slides.forEach(slide => container.append(slide.cloneNode(true)));
+  slides.forEach(slide => container.insertBefore(slide.cloneNode(true), container.firstChild));
 
-  // On scroll, wrap when reaching edges
+  // center on original slides
+  container.scrollLeft = totalWidth;
+
+  // wrap on scroll
   container.addEventListener('scroll', () => {
     if (container.scrollLeft <= 0) {
-      container.scrollLeft += N * slideWidth;
-    } else if (container.scrollLeft >= (totalSlides - N) * slideWidth) {
-      container.scrollLeft -= N * slideWidth;
+      container.scrollLeft += totalWidth;
+    } else if (container.scrollLeft >= totalWidth * 2) {
+      container.scrollLeft -= totalWidth;
     }
   });
 
-  // Arrow controls
+  // arrow buttons
   document.querySelector('.carousel-arrow.left').addEventListener('click', () => {
     container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
   });
