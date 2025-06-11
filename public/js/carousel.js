@@ -8,10 +8,36 @@ document.addEventListener('DOMContentLoaded', () => {
     iframe.addEventListener('load', () => {
       loadedCount++;
       if (loadedCount === iframes.length) {
-        initCarousel();
+        waitForStableTrackItems(initCarousel);
       }
     });
   });
+
+  function waitForStableTrackItems(callback) {
+    const trackItem = container.querySelector('.track-item');
+    let lastWidth = trackItem.offsetWidth;
+    let lastHeight = trackItem.offsetHeight;
+    let stableCount = 0;
+    const requiredStableFrames = 10; // ~500ms of stability
+
+    function poll() {
+      let curWidth = trackItem.offsetWidth;
+      let curHeight = trackItem.offsetHeight;
+      if (curWidth === lastWidth && curHeight === lastHeight) {
+        stableCount++;
+        if (stableCount >= requiredStableFrames) {
+          callback();
+          return;
+        }
+      } else {
+        stableCount = 0;
+        lastWidth = curWidth;
+        lastHeight = curHeight;
+      }
+      setTimeout(poll, 50);
+    }
+    poll();
+  }
 
   function initCarousel() {
     const originals = Array.from(container.children);
