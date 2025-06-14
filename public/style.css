@@ -146,7 +146,7 @@ nav .btn {
   position: relative;
 }
 
-/* disable pointer‐events on the iframe so drag/press events hit the cell */
+/* Allow clicks on the SoundCloud iframe */
 .carousel-cell iframe {
   width: 100% !important;
   height: 100% !important;
@@ -154,7 +154,7 @@ nav .btn {
   pointer-events: auto;
 }
 
-/* hide Flickity’s own scrollbar wrapper */
+/* Hide Flickity’s own scrollbar wrapper */
 .carousel .flickity-viewport {
   overflow: hidden !important;
   scrollbar-width: none;  /* Firefox */
