@@ -5,30 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Music By WYRM</title>
 
-  <!-- Your main CSS -->
+  <!-- Main CSS -->
   <link rel="stylesheet" href="style.css">
   <!-- Flickity CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.min.css">
-
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src 'self' https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js https://w.soundcloud.com https://cdn.jsdelivr.net;
-          frame-src https://w.soundcloud.com;
-          connect-src 'self' https://api.soundcloud.com;
-          style-src 'self' https://cdn.jsdelivr.net;
-        ">
+  <!-- SoundCloud Widget API -->
+  <script src="https://w.soundcloud.com/player/api.js"></script>
 </head>
 <body>
   <nav>
-    <a href="index.html"  class="btn">Home</a>
+    <a href="index.html" class="btn">Home</a>
     <a href="submit.html" class="btn">Submit</a>
-    <a href="admin.html"  class="btn">Admin</a>
+    <a href="admin.html" class="btn">Admin</a>
   </nav>
 
   <h2>Music By WYRM</h2>
 
-  <!-- Flickity carousel using HTML init + dragThreshold -->
+  <!-- Flickity carousel -->
   <div class="carousel js-flickity"
        data-flickity='{ 
          "wrapAround": true,
@@ -42,56 +35,50 @@
          "dragThreshold": 3
        }'>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1958761483&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1958761491&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1964880715&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1994992639&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2001104435&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2006877127&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2027072500&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
     <div class="carousel-cell">
-      <iframe
+      <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2048609540&visual=true"
-        allow="autoplay">
-      </iframe>
+        allow="autoplay"></iframe>
     </div>
   </div>
 
   <!-- Flickity JS -->
   <script src="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js"></script>
+  <!-- Carousel + SC toggle -->
+  <script src="js/carousel.js" defer></script>
 </body>
 </html>
