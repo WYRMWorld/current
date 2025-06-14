@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>WYRM SoundCloud Tracks</title>
+  <title>Music By WYRM</title>
 
   <!-- Your main CSS -->
   <link rel="stylesheet" href="style.css">
@@ -26,19 +26,9 @@
     <a href="admin.html"  class="btn">Admin</a>
   </nav>
 
-  <h2>WYRM SoundCloud Tracks</h2>
+  <h2>Music By WYRM</h2>
 
-  <!-- Flickity carousel using HTML data-init -->
-  <div class="carousel"
-       data-flickity='{ 
-         "wrapAround": true, 
-         "freeScroll": true, 
-         "contain": true, 
-         "prevNextButtons": true, 
-         "pageDots": false,
-         "selectedAttraction": 0.01,
-         "friction": 0.15
-       }'>
+  <div class="carousel js-flickity">
     <div class="carousel-cell">
       <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1958761483&visual=true" 
@@ -89,7 +79,11 @@
     </div>
   </div>
 
+  <!-- SoundCloud Widget API -->
+  <script src="https://w.soundcloud.com/player/api.js"></script>
   <!-- Flickity JS -->
   <script src="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js"></script>
+  <!-- Init Flickity & SoundCloud click‐to‐play -->
+  <script src="js/carousel.js" defer></script>
 </body>
 </html>
