@@ -28,8 +28,19 @@
 
   <h2>Music By WYRM</h2>
 
-  <!-- Flickity carousel initialized via JS -->
-  <div class="carousel js-flickity">
+  <!-- Flickity carousel using HTML init + dragThreshold -->
+  <div class="carousel js-flickity"
+       data-flickity='{ 
+         "wrapAround": true,
+         "freeScroll":  true,
+         "contain":     true,
+         "draggable":   true,
+         "prevNextButtons": true,
+         "pageDots":    false,
+         "selectedAttraction": 0.01,
+         "friction":    0.15,
+         "dragThreshold": 3
+       }'>
     <div class="carousel-cell">
       <iframe
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1958761483&visual=true"
@@ -82,7 +93,5 @@
 
   <!-- Flickity JS -->
   <script src="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.pkgd.min.js"></script>
-  <!-- Carousel behavior: init & toggle iframe pointer-events -->
-  <script src="js/carousel.js" defer></script>
 </body>
 </html>
