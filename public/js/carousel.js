@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const carouselElem = document.querySelector('.js-flickity');
+  const iframes = carouselElem.querySelectorAll('iframe');
+
   const flkty = new Flickity(carouselElem, {
     cellAlign:         'left',
     contain:           true,
@@ -12,21 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     friction:          0.15,
   });
 
-  // Build SoundCloud Widget instances
-  const widgets = flkty.cells.map(cell => {
-    const iframe = cell.element.querySelector('iframe');
-    return SC.Widget(iframe);
+  flkty.on('dragStart', () => {
+    iframes.forEach(f => f.style.pointerEvents = 'none');
   });
-
-  // Always disable iframe events so drag stays smooth
-  carouselElem.querySelectorAll('iframe').forEach(f => {
-    f.style.pointerEvents = 'none';
-  });
-
-  // On click (staticClick), toggle play/pause
-  flkty.on('staticClick', (event, pointer, cellElem, cellIndex) => {
-    if (cellIndex !== undefined) {
-      widgets[cellIndex].toggle();
-    }
+  flkty.on('dragEnd', () => {
+    iframes.forEach(f => f.style.pointerEvents = 'auto');
   });
 });
