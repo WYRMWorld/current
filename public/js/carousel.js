@@ -1,23 +1,15 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const carouselElem = document.querySelector('.js-flickity');
-  const iframes = carouselElem.querySelectorAll('iframe');
+  const carousel = document.querySelector('.js-flickity');
+  const flkty = new Flickity(carousel);
 
-  const flkty = new Flickity(carouselElem, {
-    cellAlign:         'left',
-    contain:           true,
-    wrapAround:        true,
-    freeScroll:        true,
-    draggable:         true,
-    prevNextButtons:   true,
-    pageDots:          false,
-    selectedAttraction:0.01,
-    friction:          0.15,
-  });
+  // Build SoundCloud widget instances
+  const widgets = Array.from(carousel.querySelectorAll('iframe'))
+    .map(iframe => SC.Widget(iframe));
 
-  flkty.on('dragStart', () => {
-    iframes.forEach(f => f.style.pointerEvents = 'none');
-  });
-  flkty.on('dragEnd', () => {
-    iframes.forEach(f => f.style.pointerEvents = 'auto');
+  // On staticClick (click without drag), toggle play/pause
+  flkty.on('staticClick', (event, pointer, cellElem, cellIndex) => {
+    if (cellIndex !== undefined) {
+      widgets[cellIndex].toggle();
+    }
   });
 });

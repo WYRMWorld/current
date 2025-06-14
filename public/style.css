@@ -129,13 +129,15 @@ nav .btn {
   padding: 0.5rem 0;
   border-bottom: 1px solid #333;
 }
-/* -------- Flickity carousel styling -------- */
+
+/* Flickity carousel */
 .carousel {
   background: var(--bg-color);
   padding: 2rem 0;
-  overflow: hidden;            /* hide native scrollbars */
+  overflow: hidden;
 }
 
+/* Square cells */
 .carousel-cell {
   width: 300px;
   height: 300px;
@@ -146,19 +148,20 @@ nav .btn {
   position: relative;
 }
 
-/* Allow clicks on the SoundCloud iframe */
+/* Keep iframe non-interactive so drag is smooth */
 .carousel-cell iframe {
   width: 100% !important;
   height: 100% !important;
   border: none;
-  pointer-events: auto;
+  pointer-events: none;
 }
 
-/* Hide Flickity’s own scrollbar wrapper */
+/* Hide native Flickity scrollbars */
 .carousel .flickity-viewport {
   overflow: hidden !important;
-  scrollbar-width: none;  /* Firefox */
+  scrollbar-width: none;
 }
 .carousel .flickity-viewport::-webkit-scrollbar {
-  display: none;          /* Chrome/Safari */
+  display: none;
 }
+
