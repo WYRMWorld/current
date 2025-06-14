@@ -151,7 +151,7 @@ nav .btn {
   width: 100% !important;
   height: 100% !important;
   border: none;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 /* hide Flickity’s own scrollbar wrapper */
