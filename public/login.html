@@ -4,15 +4,19 @@
   <meta charset="UTF-8">
   <title>Admin Login</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs v9 -->
+
+  <!-- 1) Firebase core -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <!-- 2) Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <!-- 3) Your config (defines global `auth`) -->
   <script src="js/firebase-config.js" defer></script>
+  <!-- 4) Your login logic -->
   <script src="js/login.js" defer></script>
 </head>
 <body>
   <main class="login-container">
-    <h1>Admin Sign‑In</h1>
+    <h1>Admin Sign-In</h1>
     <input id="email" type="email" placeholder="Email">
     <input id="password" type="password" placeholder="Password">
     <button id="sign-in">Sign In</button>

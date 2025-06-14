@@ -5,25 +5,55 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs v9 -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
 </head>
 <body>
   <nav>
-    <a href="index.html"  class="btn">Home</a>
-    <a href="submit.html" class="btn">Submit</a>
-    <a href="listen.html" class="btn">Listen</a>
+-   <a href="submit.html" class="btn">Submit</a>
+-   <a href="listen.html" class="btn">Listen</a>
+-   <a href="admin.html"  class="btn">Admin</a>
++   <a href="submit.html"     class="btn">Submit</a>
++   <a href="listen.html"     class="btn">Listen</a>
++   <a href="blog.html"       class="btn">Blog</a>
++   <a href="beatbattle.html" class="btn">Beat Battle</a>
++   <a href="admin.html"      class="btn">Admin</a>
   </nav>
   <h2>Admin Dashboard</h2>
+ <!-- Admin Dashboard queues (in admin.html) -->
+<div class="queue-section" id="feedback-queue">
+  <h2>Feedback Queue</h2>
+  <button id="next-feedback">Next Track</button>
+  <div class="queue-container">
+    <table class="queue-table">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Original File</th><th>Play</th></tr>
+      </thead>
+      <tbody id="feedback-body"></tbody>
+    </table>
+  </div>
+</div>
 
-  <!-- Existing queues -->
-  <div class="queue-section" id="feedback-queue">…</div>
-  <div class="queue-section" id="battle-queue">…</div>
-  <div class="queue-section" id="archive">…</div>
+<div class="queue-section" id="battle-queue">
+  <h2>Beat Battle Queue</h2>
+  <button id="next-battle">Next Track</button>
+  <div class="queue-container">
+    <table class="queue-table">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Original File</th><th>Play</th></tr>
+      </thead>
+      <tbody id="battle-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="queue-section">
+  <h2>Archive</h2>
+  <ul id="archive-list" class="archive-list"></ul>
+</div>
+
 
   <!-- Blog Manager -->
   <section id="blog-manager">
@@ -32,15 +62,17 @@
     <textarea id="post-content" placeholder="Write your post…"></textarea>
     <input type="file" id="post-media" multiple>
     <button id="publish-post">Publish</button>
+    <div id="blog-error" class="error-message"></div>
   </section>
 
   <!-- Beat Battle Admin -->
   <section id="battle-manager">
     <h2>Beat Battle Admin</h2>
     <button id="reset-votes">Reset Votes</button>
+    <div id="battle-error" class="error-message"></div>
   </section>
 
-  <!-- Firebase config & admin scripts -->
+  <!-- Config & scripts -->
   <script src="js/firebase-config.js" defer></script>
   <script src="js/admin.js" defer></script>
   <script src="js/admin-blog.js" defer></script>

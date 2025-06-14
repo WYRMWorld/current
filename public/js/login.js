@@ -17,3 +17,5 @@ document.getElementById('sign-in').addEventListener('click', async () => {
     btn.disabled = false;
   }
 });
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
