@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
 </head>
 <body>
   <nav>
@@ -14,33 +20,30 @@
   </nav>
   <h2>Admin Dashboard</h2>
 
-  <div class="queue-section" id="feedback-queue">
-    <h2>Feedback Queue</h2>
-    <button id="next-feedback">Next Track</button>
-    <div class="queue-container">
-      <table class="queue-table">
-        <thead><tr><th>#</th><th>Name</th><th>Original File</th><th>Play</th></tr></thead>
-        <tbody id="feedback-body"></tbody>
-      </table>
-    </div>
-  </div>
+  <!-- Existing queues -->
+  <div class="queue-section" id="feedback-queue">…</div>
+  <div class="queue-section" id="battle-queue">…</div>
+  <div class="queue-section" id="archive">…</div>
 
-  <div class="queue-section" id="battle-queue">
-    <h2>Beat Battle Queue</h2>
-    <button id="next-battle">Next Track</button>
-    <div class="queue-container">
-      <table class="queue-table">
-        <thead><tr><th>#</th><th>Name</th><th>Original File</th><th>Play</th></tr></thead>
-        <tbody id="battle-body"></tbody>
-      </table>
-    </div>
-  </div>
+  <!-- Blog Manager -->
+  <section id="blog-manager">
+    <h2>New Blog Post</h2>
+    <input id="post-title" placeholder="Title">
+    <textarea id="post-content" placeholder="Write your post…"></textarea>
+    <input type="file" id="post-media" multiple>
+    <button id="publish-post">Publish</button>
+  </section>
 
-  <div class="queue-section">
-    <h2>Archive</h2>
-    <ul class="archive-list" id="archive-list"></ul>
-  </div>
+  <!-- Beat Battle Admin -->
+  <section id="battle-manager">
+    <h2>Beat Battle Admin</h2>
+    <button id="reset-votes">Reset Votes</button>
+  </section>
 
+  <!-- Firebase config & admin scripts -->
+  <script src="js/firebase-config.js" defer></script>
   <script src="js/admin.js" defer></script>
+  <script src="js/admin-blog.js" defer></script>
+  <script src="js/admin-beatbattle.js" defer></script>
 </body>
 </html>

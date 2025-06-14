@@ -165,3 +165,70 @@ nav .btn {
   display: none;
 }
 
+/* Blog posts */
+.post {
+  background: #1a1a1a;
+  color: #f0f0f0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.post-media a {
+  display: inline-block;
+  margin-right: 1rem;
+  color: #4db6ac;
+}
+
+/* Beat Battle tracks */
+.track {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: #eee;
+}
+.spinner {
+  margin-left: 0.5rem;
+}
+
+/* Admin form sections */
+#blog-manager,
+#battle-manager {
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+.error-message {
+  color: #ff6b6b;
+  margin-top: 0.5rem;
+}
+
+/* Login page */
+.login-container {
+  max-width: 360px;
+  margin: 5rem auto;
+  background: #222;
+  padding: 2rem;
+  border-radius: 8px;
+  color: #f0f0f0;
+  text-align: center;
+}
+.login-container input,
+.login-container button {
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+}
+.login-container button {
+  background: #4db6ac;
+  color: #111;
+  font-weight: bold;
+}
+.login-container .error-message {
+  color: #ff6b6b;
+}
