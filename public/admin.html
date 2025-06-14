@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin</title><link rel="stylesheet" href="style.css"></head><body>
-<nav><a href="index.html" class="btn">Home</a><a href="submit.html" class="btn">Submit</a><a href="listen.html" class="btn">Listen</a></nav>
-<h2>Admin Dashboard</h2>
-<div class="queue-container">
-  <table class="queue-table">
-    <thead><tr><th>#</th><th>Name</th><th>Track</th><th>Type</th></tr></thead>
-    <tbody id="admin-body"></tbody>
-  </table>
-</div>
-<script src="js/admin.js" defer></script>
-</body></html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html"  class="btn">Home</a>
+    <a href="submit.html" class="btn">Submit</a>
+    <a href="listen.html" class="btn">Listen</a>
+  </nav>
+  <h2>Admin Dashboard</h2>
+
+  <div class="queue-section" id="feedback-queue">
+    <h2>Feedback Queue</h2>
+    <button id="next-feedback">Next Track</button>
+    <div class="queue-container">
+      <table class="queue-table">
+        <thead><tr><th>#</th><th>Name</th><th>Original File</th><th>Play</th></tr></thead>
+        <tbody id="feedback-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="queue-section" id="battle-queue">
+    <h2>Beat Battle Queue</h2>
+    <button id="next-battle">Next Track</button>
+    <div class="queue-container">
+      <table class="queue-table">
+        <thead><tr><th>#</th><th>Name</th><th>Original File</th><th>Play</th></tr></thead>
+        <tbody id="battle-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="queue-section">
+    <h2>Archive</h2>
+    <ul class="archive-list" id="archive-list"></ul>
+  </div>
+
+  <script src="js/admin.js" defer></script>
+</body>
+</html>
