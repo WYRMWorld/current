@@ -1,47 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src  'self'
-                      https://www.gstatic.com
-                      https://www.googleapis.com
-                      https://cdn.jsdelivr.net
-                      https://w.soundcloud.com
-                      'unsafe-eval';
-          connect-src 'self'
-                      https://firestore.googleapis.com
-                      https://www.googleapis.com;
-          style-src   'self' 'unsafe-inline';
-          img-src     'self' data: blob:;
-          frame-src   https://w.soundcloud.com;
-        ">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>WYRM Blog</title>
-  <link rel="stylesheet" href="style.css">
+// public/js/admin-blog.js
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"      defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"   defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"      defer></script>
+// Grab DOM refs
+const titleInput   = document.getElementById("new-post-title");
+const contentInput = document.getElementById("new-post-content");
+const submitBtn    = document.getElementById("submit-post");
+const statusMsg    = document.getElementById("post-status");
 
-  <!-- Init & Blog loader -->
-  <script src="js/firebase-config.js" defer></script>
-  <script src="js/blog.js"           defer></script>
-</head>
-<body>
-  <nav>
-    <a href="index.html"      class="btn">Home</a>
-    <a href="submit.html"     class="btn">Submit</a>
-    <a href="listen.html"     class="btn">Listen</a>
-    <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html"      class="btn">Admin</a>
-  </nav>
-  <header><h1>WYRM Blog</h1></header>
-  <main id="posts-container"></main>
-  <footer>© WYRM Collective</footer>
-</body>
-</html>
+// On-click handler
+submitBtn.addEventListener("click", async () => {
+  const title   = titleInput.value.trim();
+  const content = contentInput.value.trim();
+
+  if (!title || !content) {
+    statusMsg.textContent = "Both title and content are required.";
+    return;
+  }
+
+  submitBtn.disabled = true;
+  statusMsg.textContent = "";
+
+  try {
+    // Use the compat global `db`:
+    await db.collection("posts").add({
+      title,
+      content,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    statusMsg.textContent = "Post published!";
+    // Clear form:
+    titleInput.value = "";
+    contentInput.value = "";
+  } catch (err) {
+    console.error("Error publishing post:", err);
+    statusMsg.textContent = "Failed to publish: " + err.message;
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
