@@ -232,3 +232,34 @@ nav .btn {
 .login-container .error-message {
   color: #ff6b6b;
 }
+/* ChatGPT-style inputs */
+.chatgpt-input {
+  width: 100%;
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+}
+
+/* Archive dropdown styling */
+#archive-dropdown {
+  background: var(--card-bg);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin: 2rem 0;
+}
+#archive-dropdown summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--accent-green);
+  outline: none;
+}
+#archive-dropdown[open] {
+  padding-bottom: 1rem;
+}
