@@ -1,86 +1,100 @@
 // public/js/admin.js
-// ————————————————————————————————————————————————————————————
-// Uses the compat global `db` (firebase.firestore())
-// and Firebase Auth if you need it (auth)
+import { auth, db } from "./firebase-config.js";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-// DOM refs
-const fbList      = document.getElementById("feedback-list");
-const battleList  = document.getElementById("battle-list");
-const archiveList = document.getElementById("archive-list");
+// ——————————————————————————————————————————————————————————————————————————————
+// Sign-out handler
+document.getElementById("sign-out").addEventListener("click", async () => {
+  await auth.signOut();
+  window.location = "login.html";
+});
 
-const nextFbBtn    = document.getElementById("next-feedback");
-const nextBattleBtn= document.getElementById("next-battle");
+// ——————————————————————————————————————————————————————————————————————————————
+// Queues & render helpers (pseudo-code placeholders)
 
-// Firestore collections
-const fbCol       = db.collection("queues").doc("feedback").collection("items");
-const battleCol   = db.collection("queues").doc("beatBattle").collection("items");
-const archiveCol  = db.collection("queues").doc("archive").collection("items");
-
-// ————————————————————————————————————————————————————————————
-// Renders the three lists from Firestore
-async function renderAll() {
-  await Promise.all([ renderFeedback(), renderBattle(), renderArchive() ]);
-}
-
+// Feedback:
 async function renderFeedback() {
-  const snap = await fbCol.orderBy("enqueuedAt").get();
-  fbList.innerHTML = snap.docs.map((d,i) => {
-    const x = d.data();
-    return `<tr>
-      <td>${i+1}</td>
-      <td>${x.name}</td>
-      <td>${x.originalName}</td>
-      <td><audio controls src="${x.trackUrl}"></audio></td>
-    </tr>`;
-  }).join("");
+  const q = query(
+    collection(db, "submissions"),
+    orderBy("timestamp"),
+    limit(1)
+  );
+  const snap = await getDocs(q);
+  // iterate and populate #feedback-list tbody…
 }
 
+// Battle:
 async function renderBattle() {
-  const snap = await battleCol.orderBy("enqueuedAt").get();
-  battleList.innerHTML = snap.docs.map((d,i) => {
-    const x = d.data();
-    return `<tr>
-      <td>${i+1}</td>
-      <td>${x.name}</td>
-      <td>${x.originalName}</td>
-      <td><audio controls src="${x.trackUrl}"></audio></td>
-    </tr>`;
-  }).join("");
+  const q = query(
+    collection(db, "submissions"),
+    orderBy("timestamp")
+  );
+  // fetch & populate #battle-list…
 }
 
+// Archive:
 async function renderArchive() {
-  const snap = await archiveCol.orderBy("archivedAt", "desc").get();
-  archiveList.innerHTML = snap.docs.map(d => {
-    const x = d.data();
-    const t = x.archivedAt.toDate().toLocaleString();
-    return `<li>${t}: ${x.name} (${x.originalName})</li>`;
-  }).join("");
+  const q = query(
+    collection(db, "posts"),
+    orderBy("publishedAt", "desc")
+  );
+  // fetch & populate #archive-list…
 }
 
-// ————————————————————————————————————————————————————————————
-// Move one item from a queue into the archive, then re-render.
-async function dequeueAndArchive(queueCol) {
-  const snap = await queueCol.orderBy("enqueuedAt").limit(1).get();
-  if (snap.empty) return;
-  const doc = snap.docs[0];
-  const data = doc.data();
-
-  // write into archive
-  await archiveCol.add({
-    ...data,
-    archivedAt: firebase.firestore.FieldValue.serverTimestamp()
-  });
-
-  // delete from original queue
-  await doc.ref.delete();
-
-  // refresh
-  renderAll();
+// call all renders:
+async function renderAll() {
+  await Promise.all([
+    renderFeedback(),
+    renderBattle(),
+    renderArchive()
+  ]);
 }
+renderAll();
 
-// wire up buttons
-nextFbBtn.addEventListener("click", () => dequeueAndArchive(fbCol));
-nextBattleBtn.addEventListener("click", () => dequeueAndArchive(battleCol));
+// ——————————————————————————————————————————————————————————————————————————————
+// Publish new blog post
 
-// initial render
-document.addEventListener("DOMContentLoaded", renderAll);
+const titleInput   = document.getElementById("title-input");
+const contentInput = document.getElementById("content-input");
+const mediaInput   = document.getElementById("media-input");
+const msgEl        = document.getElementById("blog-msg");
+
+document.getElementById("publish-btn").addEventListener("click", async () => {
+  msgEl.textContent = "";
+  try {
+    // Build new post object:
+    const newPost = {
+      title:       titleInput.value.trim(),
+      content:     contentInput.value.trim(),
+      publishedAt: Date.now()
+    };
+    // (Optional) if a file is selected, upload to Storage and add URL…
+    if (mediaInput.files.length) {
+      // your storage upload logic here, then set newPost.mediaUrl = ...
+    }
+    await addDoc(collection(db, "posts"), newPost);
+    titleInput.value   = "";
+    contentInput.value = "";
+    mediaInput.value   = "";
+    renderArchive();
+  } catch (e) {
+    console.error(e);
+    msgEl.textContent = "Failed to publish: " + e.message;
+  }
+});
+
+document.getElementById("cancel-btn").addEventListener("click", () => {
+  titleInput.value   = "";
+  contentInput.value = "";
+  mediaInput.value   = "";
+  msgEl.textContent  = "";
+});
