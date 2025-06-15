@@ -1,29 +1,30 @@
-// public/js/blog.js
+// public/blog.js
+import { db } from './firebase-config.js';
+import { collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+
+const container = document.getElementById('posts-container');
 
 async function loadPosts() {
   try {
-    const snapshot = await db.collection("posts")
-                             .orderBy("timestamp", "desc")
-                             .get();
-    const container = document.getElementById("posts-container");
-    container.innerHTML = "";    
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const div  = document.createElement("div");
-      div.className = "post";
-      div.innerHTML = `
-        <h2>${data.title}</h2>
-        <p>${data.content}</p>
-        <small>${new Date(data.timestamp).toLocaleString()}</small>
+    const q    = query(collection(db, 'posts'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    container.innerHTML = '';
+    snap.forEach(doc => {
+      const { title, content, createdAt } = doc.data();
+      const date = createdAt ? new Date(createdAt.seconds * 1000).toLocaleDateString() : '';
+      const article = document.createElement('article');
+      article.className = 'post';
+      article.innerHTML = `
+        <h2>${title}</h2>
+        <time>${date}</time>
+        <div class="post-content">${content}</div>
       `;
-      container.append(div);
+      container.append(article);
     });
   } catch (e) {
-    document.getElementById("posts-container").textContent =
-      "Unable to load blog posts.";
-    console.error("Error loading posts:", e);
+    console.error(e);
+    container.textContent = 'Unable to load blog posts.';
   }
 }
 
-// Run on page load
-window.addEventListener("DOMContentLoaded", loadPosts);
+loadPosts();

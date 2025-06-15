@@ -1,71 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://cdn.jsdelivr.net https://www.gstatic.com https://www.googleapis.com https://identitytoolkit.googleapis.com 'unsafe-eval';
+    connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob:;
+    frame-src https://w.soundcloud.com;
+  ">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"       defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"      defer></script>
+  <!-- Firebase compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"   defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js" defer></script>
 
-  <!-- config + admin logic -->
+  <!-- App config and logic -->
   <script src="js/firebase-config.js" defer></script>
-  <script src="js/admin.js"          defer></script>
+  <script src="js/admin.js" defer></script>
 </head>
 <body>
-  <nav>
+  <nav class="site-nav">
     <a href="index.html" class="btn">Home</a>
     <a href="submit.html" class="btn">Submit</a>
+    <a href="listen.html" class="btn">Listen</a>
     <a href="blog.html" class="btn">Blog</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html" class="btn">Admin</a>
- </nav>
+    <button id="sign-out" class="btn">Sign Out</button>
+  </nav>
 
-  <h1>WYRM Admin Dashboard</h1>
-  <div id="login-section">
+  <!-- Login Section -->
+  <section id="login-section" class="admin-section">
     <h2>Admin Sign-In</h2>
-    <input id="email"    type="email"    placeholder="you@example.com">
-    <input id="password" type="password" placeholder="password">
-    <button id="sign-in">Sign In</button>
-    <div id="login-error"></div>
-   </div>
-
-   <div id="admin-ui" style="display:none;">
-
-   <!-- Your feedback/beatbattle queues here… -->  
-  <section id="feedback-queue">
-    <h2>Feedback Queue</h2>
-    <button id="next-feedback">Next Feedback</button>
-    <table id="feedback-list"><thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead><tbody></tbody></table>
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+    <button id="sign-in" class="btn">Sign In</button>
+    <div id="login-error" class="error-message"></div>
   </section>
 
-  <section id="battle-queue">
-    <h2>Beat Battle Queue</h2>
-    <button id="next-battle">Next Battle</button>
-    <button id="reset-battle">Reset Battle</button>
-    <table id="battle-list"><thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead><tbody></tbody></table>
-  </section>
+  <!-- Admin UI -->
+  <main id="admin-ui" class="admin-dashboard" hidden>
 
-  <section id="new-blog-post">
+    <!-- Feedback Queue -->
+    <section id="feedback-queue" class="admin-section">
+      <h2>Feedback Queue</h2>
+      <button id="next-feedback" class="btn">Next Feedback</button>
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead>
+        <tbody id="feedback-list"></tbody>
+      </table>
+    </section>
+
+    <!-- Beat Battle Queue -->
+    <section id="battle-queue" class="admin-section">
+      <h2>Beat Battle Queue</h2>
+      <button id="next-battle" class="btn">Next Battle</button>
+      <button id="reset-battle" class="btn danger">Reset Battle</button>
+      <table>
+        <thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead>
+        <tbody id="battle-list"></tbody>
+      </table>
+    </section>
+
+    <!-- New Blog Post -->
+    <section id="new-blog-post" class="admin-section">
       <h2>New Blog Post</h2>
-      <input id="post-title" type="text" placeholder="Title">
-      <textarea id="post-content" placeholder="Content"></textarea>
-      <input id="post-file" type="file"><br>
-      <button id="publish">Publish</button>
-      <button id="sign-out">Sign Out</button>
-      <div id="publish-error"></div>
+      <input id="new-post-title" type="text" placeholder="Title">
+      <textarea id="new-post-content" placeholder="Content" rows="6"></textarea>
+      <label for="new-post-media">Attach Media</label>
+      <input id="new-post-media" type="file" accept="image/*,audio/*,video/*">
+      <div class="btn-group">
+        <button id="publish-post" class="btn">Publish</button>
+        <button id="cancel-post" class="btn">Cancel</button>
+      </div>
+      <div id="post-status" class="status"></div>
     </section>
 
-    <section id="archive">
+    <!-- Archive Dropdown -->
+    <section id="archive-dropdown" class="admin-section">
       <h2>Archive</h2>
-      <button id="show-archive">View Archived Posts</button>
-      <ul id="archive-list"></ul>
+      <details>
+        <summary>View Archived Posts</summary>
+        <ul id="archive-list"></ul>
+      </details>
     </section>
-  </div>
 
-  <footer>© WYRM Collective</footer>
+  </main>
+
+  <footer>&copy; WYRM Collective</footer>
 </body>
 </html>
