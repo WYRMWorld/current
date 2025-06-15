@@ -1,21 +1,41 @@
+// public/js/beatbattle.js
+// Uses global db
+
 async function renderBattle() {
-  const snap = await db.collection("beatBattles/current/tracks").get();
-  const cont = document.getElementById("battle-container");
-  snap.forEach(d => {
-    const { name, url, votes=0 } = d.data();
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <p>${name}</p>
+  const container = document.getElementById("battle-container");
+  container.innerHTML = '';                   // clear old items
+
+  // 1) Query only battle‐tagged submissions
+  const snap = await db
+    .collection('submissions')
+    .where('type', '==', 'battle')
+    .orderBy('createdAt', 'asc')              // or desc if you prefer
+    .get();
+
+  snap.forEach(docSnap => {
+    const { name, url, votes = 0 } = docSnap.data();
+    const card = document.createElement('div');
+    card.classList.add('track');
+
+    card.innerHTML = `
+      <p><strong>${name}</strong></p>
       <audio controls src="${url}"></audio>
-      <button onclick="vote('${d.id}')">Vote (${votes})</button>
+      <button id="vote-${docSnap.id}">Vote (${votes})</button>
     `;
-    cont.appendChild(div);
+    container.appendChild(card);
+
+    // 2) Attach vote handler
+    document.getElementById(`vote-${docSnap.id}`)
+      .addEventListener('click', async () => {
+        try {
+          await db.doc(`submissions/${docSnap.id}`)
+            .update({ votes: firebase.firestore.FieldValue.increment(1) });
+          renderBattle();                        // re‐draw updated counts
+        } catch (e) {
+          console.error("Vote error:", e);
+        }
+      });
   });
 }
-window.vote = async id => {
-  const ref = db.doc(`beatBattles/current/tracks/${id}`);
-  await ref.update({ votes: firebase.firestore.FieldValue.increment(1) });
-  location.reload();
-};
-renderBattle();
 
+renderBattle();
