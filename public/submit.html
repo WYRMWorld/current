@@ -2,22 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src  'self'
-                    https://www.gstatic.com
-                    https://www.googleapis.com
-                    'unsafe-eval';
-        connect-src 'self'
-                    https://firestore.googleapis.com
-                    https://www.googleapis.com;
-        style-src   'self' 'unsafe-inline';
-        img-src     'self' data: blob:;
-        frame-src   https://w.soundcloud.com
-                    https://www.gstatic.com;
-      ">
-
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src  'self';
+          style-src   'self' 'unsafe-inline';
+          img-src     'self' data:;
+          connect-src 'self';
+        ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Submit</title>
   <link rel="stylesheet" href="style.css">
@@ -30,25 +22,22 @@
     <a href="beatbattle.html" class="btn">Beat Battle</a>
     <a href="admin.html"      class="btn">Admin</a>
   </nav>
-
   <h2>Submit Your Track</h2>
   <main class="form-container">
     <form action="/submit" method="POST" enctype="multipart/form-data">
       <label>Name:</label>
       <input type="text" name="name" required>
-
       <label>Track File:</label>
       <input type="file" name="track" accept=".wav,.mp3" required>
-
       <fieldset>
         <legend>Queue Type</legend>
         <label><input type="radio" name="type" value="feedback" checked> Feedback</label>
         <label><input type="radio" name="type" value="battle"> Beat Battle</label>
       </fieldset>
-
       <button class="btn-primary" type="submit">Join Queue</button>
     </form>
   </main>
   <script src="js/submit.js" defer></script>
 </body>
 </html>
+<!--   <footer>© WYRM Collective</footer> -->

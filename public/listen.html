@@ -2,22 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy"
-      content="
-        default-src 'self';
-        script-src  'self'
-                    https://www.gstatic.com
-                    https://www.googleapis.com
-                    'unsafe-eval';
-        connect-src 'self'
-                    https://firestore.googleapis.com
-                    https://www.googleapis.com;
-        style-src   'self' 'unsafe-inline';
-        img-src     'self' data: blob:;
-        frame-src   https://w.soundcloud.com
-                    https://www.gstatic.com;
-      ">
-
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src  'self' https://cdn.jsdelivr.net https://w.soundcloud.com;
+          style-src   'self' https://cdn.jsdelivr.net 'unsafe-inline';
+          img-src     'self' data:;
+          connect-src 'self';
+          frame-src   https://w.soundcloud.com;
+        ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Music By WYRM</title>
   <link rel="stylesheet" href="style.css">
@@ -32,9 +25,7 @@
     <a href="beatbattle.html" class="btn">Beat Battle</a>
     <a href="admin.html"      class="btn">Admin</a>
   </nav>
-
   <h2>Music By WYRM</h2>
-  <!-- Flickity carousel -->
   <div class="carousel js-flickity"
        data-flickity='{ 
          "wrapAround": true,
@@ -47,6 +38,7 @@
          "friction":    0.15,
          "dragThreshold": 3
        }'>
+    <!-- your .carousel-cell elements -->
     <div class="carousel-cell">
       <iframe 
         src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/1958761483&visual=true"
