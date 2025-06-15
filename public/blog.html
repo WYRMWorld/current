@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <!-- 1) CSP META (must come first!) -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
@@ -18,17 +18,18 @@
           img-src     'self' data: blob:;
           frame-src   https://w.soundcloud.com;
         ">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Blog</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs -->
+  <!-- 2) Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"      defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"   defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"      defer></script>
 
-  <!-- Init & Blog loader -->
+  <!-- 3) Your config & loader -->
   <script src="js/firebase-config.js" defer></script>
   <script src="js/blog.js"           defer></script>
 </head>
@@ -40,6 +41,7 @@
     <a href="beatbattle.html" class="btn">Beat Battle</a>
     <a href="admin.html"      class="btn">Admin</a>
   </nav>
+
   <header><h1>WYRM Blog</h1></header>
   <main id="posts-container"></main>
   <footer>© WYRM Collective</footer>
