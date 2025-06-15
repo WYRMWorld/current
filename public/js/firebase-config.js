@@ -1,21 +1,25 @@
 // public/js/firebase-config.js
 
-// Fire SDKs are loaded via <script> tags in each HTML page
-
-// Your web app’s Firebase configuration
+// Your Firebase configuration
 const firebaseConfig = {
-  apiKey:     "AIzaSyDHnyLP2EWkPPD3c4JVVGjUphYKASoVEkI",
-  authDomain: "wyrm-collective.firebaseapp.com",
-  projectId:  "wyrm-collective",
-  storageBucket: "wyrm-collective.firebasestorage.app",
+  apiKey:            "AIzaSyDHnyLP2EWkPPD3c4JVVGjUphYKASoVEkI",
+  authDomain:        "wyrm-collective.firebaseapp.com",
+  projectId:         "wyrm-collective",
+  storageBucket:     "wyrm-collective.appspot.com",      // <-- corrected bucket host
   messagingSenderId: "450404872617",
-  appId:      "1:450404872617:web:9644350024fd570d0614b8"
+  appId:             "1:450404872617:web:9644350024fd570d0614b8",
+  measurementId:     "G-E9FPEBEMMX"
 };
 
-// Initialize Firebase
+// Initialize the compat (namespaced) SDK
 firebase.initializeApp(firebaseConfig);
 
-// Expose the services you need
+// Grab the services off the global `firebase`
 const db      = firebase.firestore();
-const storage = firebase.storage();
 const auth    = firebase.auth();
+const storage = firebase.storage();
+
+// Make them available globally if you like
+window.db      = db;
+window.auth    = auth;
+window.storage = storage;
