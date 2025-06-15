@@ -300,3 +300,28 @@ nav .btn:hover {
   max-width: 800px;
   margin: 0 auto 1.5rem;
 }
+
+/* —————————————————————————————————————
+   Admin “New Blog Post” form: big chat-like box
+   ————————————————————————————————————— */
+#new-blog-post textarea {
+  width: 100%;
+  min-height: 8em;          /* make it tall by default */
+  padding: 0.75em;          /* comfy padding inside */
+  border-radius: 0.5em;     /* rounded corners */
+  border: 1px solid var(--card-hover);
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;         /* user can drag to resize taller */
+  box-sizing: border-box;
+  margin-bottom: 0.75em;
+}
+
+/* file-picker & buttons */
+#new-blog-post input[type="file"] {
+  display: block;
+  margin-bottom: 1rem;
+}
+#new-blog-post button {
+  margin-right: 0.5rem;
+}

@@ -1,39 +1,51 @@
 // public/js/admin-blog.js
 
-// Grab DOM refs
 const titleInput   = document.getElementById("new-post-title");
 const contentInput = document.getElementById("new-post-content");
-const submitBtn    = document.getElementById("submit-post");
-const statusMsg    = document.getElementById("post-status");
+const mediaInput   = document.getElementById("new-post-media");
+const publishBtn   = document.getElementById("submit-post");
+const cancelBtn    = document.getElementById("cancel-post");
+const statusDiv    = document.getElementById("post-status");
 
-// On-click handler
-submitBtn.addEventListener("click", async () => {
-  const title   = titleInput.value.trim();
-  const content = contentInput.value.trim();
-
-  if (!title || !content) {
-    statusMsg.textContent = "Both title and content are required.";
-    return;
-  }
-
-  submitBtn.disabled = true;
-  statusMsg.textContent = "";
+publishBtn.addEventListener("click", async () => {
+  publishBtn.disabled = true;
+  statusDiv.textContent = "";
 
   try {
-    // Use the compat global `db`:
+    // 1) If a file is selected, upload it to Storage
+    let mediaUrl = "";
+    if (mediaInput.files.length) {
+      const file     = mediaInput.files[0];
+      const storageRef = firebase.storage().ref();
+      const fileRef    = storageRef.child(`blogMedia/${file.name}`);
+      await fileRef.put(file);
+      mediaUrl = await fileRef.getDownloadURL();
+    }
+
+    // 2) Write the new post into Firestore
     await db.collection("posts").add({
-      title,
-      content,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      title:   titleInput.value.trim(),
+      body:    contentInput.value.trim(),
+      media:   mediaUrl,                // blank string if none
+      created: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    statusMsg.textContent = "Post published!";
-    // Clear form:
+
+    statusDiv.textContent = "✅ Published!";
+    // clear form
     titleInput.value = "";
     contentInput.value = "";
+    mediaInput.value = "";
   } catch (err) {
-    console.error("Error publishing post:", err);
-    statusMsg.textContent = "Failed to publish: " + err.message;
+    console.error(err);
+    statusDiv.textContent = "❌ Failed to publish: " + (err.message||err);
   } finally {
-    submitBtn.disabled = false;
+    publishBtn.disabled = false;
   }
+});
+
+cancelBtn.addEventListener("click", () => {
+  titleInput.value   = "";
+  contentInput.value = "";
+  mediaInput.value   = "";
+  statusDiv.textContent = "";
 });
