@@ -9,17 +9,21 @@
           connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com;
           style-src   'self' 'unsafe-inline';
           img-src     'self' data: blob:;
+          frame-src   https://w.soundcloud.com https://www.gstatic.com;
         ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Beat Battle</title>
   <link rel="stylesheet" href="style.css">
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" defer></script>
+  <!-- Firebase SDKs (v9) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"      defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"   defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"      defer></script>
+
+  <!-- Init & Battle loader -->
   <script src="js/firebase-config.js" defer></script>
-  <script src="js/beatbattle.js" defer></script>
+  <script src="js/beatbattle.js"     defer></script>
 </head>
 <body>
   <nav>
