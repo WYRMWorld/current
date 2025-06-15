@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs (v9) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <!-- Firebase SDKs v9 -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"       defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"  defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"     defer></script>
 </head>
 <body>
   <nav>
@@ -47,12 +47,7 @@
   <section id="blog-manager">
     <h3>New Blog Post</h3>
     <input  id="post-title"   placeholder="Title" class="chatgpt-input">
-    <textarea 
-      id="post-content" 
-      rows="10" 
-      placeholder="Write your post…" 
-      class="chatgpt-input">
-    </textarea>
+    <textarea id="post-content" rows="10" placeholder="Write your post…" class="chatgpt-input"></textarea>
     <input type="file" id="post-media" multiple>
     <button id="publish-post">Publish</button>
     <div id="blog-error" class="error-message"></div>
@@ -71,10 +66,10 @@
     <ul id="archive-list"></ul>
   </details>
 
-  <!-- Initialize & run your scripts -->
-  <script src="js/firebase-config.js"      defer></script>
-  <script src="js/admin.js"                defer></script>
-  <script src="js/admin-blog.js"           defer></script>
-  <script src="js/admin-beatbattle.js"     defer></script>
+  <!-- Init & scripts -->
+  <script src="js/firebase-config.js"  defer></script>
+  <script src="js/admin.js"            defer></script>
+  <script src="js/admin-blog.js"       defer></script>
+  <script src="js/admin-beatbattle.js" defer></script>
 </body>
 </html>
