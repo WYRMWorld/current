@@ -2,19 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src  'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-eval';
+          connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com;
+          style-src   'self' 'unsafe-inline';
+          img-src     'self' data: blob:;
+        ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Blog</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"       defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"  defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"     defer></script>
-
-  <!-- Init & loader -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" defer></script>
   <script src="js/firebase-config.js" defer></script>
-  <script src="js/blog.js"           defer></script>
+  <script src="js/blog.js" defer></script>
 </head>
 <body>
   <nav>
