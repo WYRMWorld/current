@@ -1,48 +1,29 @@
 // public/js/blog.js
-// (No imports — this uses the global `db` from firebase-config.js)
 
 async function loadPosts() {
   try {
-    const snapshot = await db
-      .collection("posts")
-      .orderBy("createdAt", "desc")
-      .get();
-
+    const snapshot = await db.collection("posts")
+                             .orderBy("timestamp", "desc")
+                             .get();
     const container = document.getElementById("posts-container");
-    container.innerHTML = ""; // clear any placeholder
-
+    container.innerHTML = "";    
     snapshot.forEach(doc => {
-      const { title, content, mediaUrls = [], createdAt } = doc.data();
-
-      const article = document.createElement("article");
-      article.classList.add("blog-post");
-
-      // Format date (if createdAt is a Firestore Timestamp)
-      let dateString = "";
-      if (createdAt && typeof createdAt.toDate === "function") {
-        dateString = new Date(createdAt.toDate()).toLocaleDateString();
-      }
-
-      // Build media links, if any
-      const mediaHtml = mediaUrls
-        .map(u => `<a href="${u}" target="_blank" class="media-link">Media</a>`)
-        .join(" ");
-
-      article.innerHTML = `
-        <h2>${title}</h2>
-        <time>${dateString}</time>
-        <div class="post-content">${content}</div>
-        <div class="post-media">${mediaHtml}</div>
+      const data = doc.data();
+      const div  = document.createElement("div");
+      div.className = "post";
+      div.innerHTML = `
+        <h2>${data.title}</h2>
+        <p>${data.content}</p>
+        <small>${new Date(data.timestamp).toLocaleString()}</small>
       `;
-
-      container.appendChild(article);
+      container.append(div);
     });
-  } catch (err) {
-    console.error("Error loading posts:", err);
-    document
-      .getElementById("posts-container")
-      .textContent = "Unable to load blog posts.";
+  } catch (e) {
+    document.getElementById("posts-container").textContent =
+      "Unable to load blog posts.";
+    console.error("Error loading posts:", e);
   }
 }
 
-document.addEventListener("DOMContentLoaded", loadPosts);
+// Run on page load
+window.addEventListener("DOMContentLoaded", loadPosts);
