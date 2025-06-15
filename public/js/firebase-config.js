@@ -18,3 +18,4 @@ firebase.initializeApp(firebaseConfig);
 window.auth = firebase.auth();
 window.db   = firebase.firestore();
 window.storage = firebase.storage();
+</script>

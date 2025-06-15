@@ -2,33 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- 1) Compat SDKs -->
+  <!-- compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"       defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"      defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"   defer></script>
 
-  <!-- 2) Config + your admin logic -->
-  <script src="js/firebase-config.js"     defer></script>
-  <script src="js/admin.js"               defer></script>
-  <script src="js/admin-blog.js"          defer></script>
-  <script src="js/admin-beatbattle.js"    defer></script>
+  <!-- config + admin logic -->
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/admin.js"          defer></script>
 </head>
 <body>
   <nav>
-    <a href="index.html"      class="btn">Home</a>
-    <a href="submit.html"     class="btn">Submit</a>
-    <a href="listen.html"     class="btn">Listen</a>
-    <a href="blog.html"       class="btn">Blog</a>
+    <a href="index.html" class="btn">Home</a>
+    <a href="submit.html" class="btn">Submit</a>
+    <a href="blog.html" class="btn">Blog</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html"      class="btn">Admin</a>
-  </nav>
+    <a href="admin.html" class="btn">Admin</a>
+ </nav>
 
   <h1>WYRM Admin Dashboard</h1>
+  <div id="login-section">
+    <h2>Admin Sign-In</h2>
+    <input id="email"    type="email"    placeholder="you@example.com">
+    <input id="password" type="password" placeholder="password">
+    <button id="sign-in">Sign In</button>
+    <div id="login-error"></div>
+   </div>
+
+   <div id="admin-ui" style="display:none;">
+
+   <!-- Your feedback/beatbattle queues here… -->  
   <section id="feedback-queue">
     <h2>Feedback Queue</h2>
     <button id="next-feedback">Next Feedback</button>
@@ -43,21 +50,22 @@
   </section>
 
   <section id="new-blog-post">
-    <h2>New Blog Post</h2>
-    <input id="title-input" placeholder="Title">
-    <textarea id="content-input" placeholder="Content…"></textarea>
-    <input type="file" id="file-input">
-    <button id="publish">Publish</button>
-    <button id="cancel">Cancel</button>
-    <div id="admin-blog-error" class="error-message"></div>
-  </section>
+      <h2>New Blog Post</h2>
+      <input id="post-title" type="text" placeholder="Title">
+      <textarea id="post-content" placeholder="Content"></textarea>
+      <input id="post-file" type="file"><br>
+      <button id="publish">Publish</button>
+      <button id="sign-out">Sign Out</button>
+      <div id="publish-error"></div>
+    </section>
 
-  <section id="archive">
-    <button id="toggle-archive">View Archived Posts</button>
-    <div id="archive-container" hidden></div>
-  </section>
+    <section id="archive">
+      <h2>Archive</h2>
+      <button id="show-archive">View Archived Posts</button>
+      <ul id="archive-list"></ul>
+    </section>
+  </div>
 
-  <button id="sign-out">Sign Out</button>
   <footer>© WYRM Collective</footer>
 </body>
 </html>

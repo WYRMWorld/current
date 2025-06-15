@@ -2,31 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Blog</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- 1) Compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"        defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"  defer></script>
+  <!-- 1) Core compat + Firestore compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"       defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
 
-  <!-- 2) Config + your blog loader -->
+  <!-- 2) Your config + page logic -->
   <script src="js/firebase-config.js" defer></script>
   <script src="js/blog.js"           defer></script>
 </head>
 <body>
   <nav>
-    <a href="index.html"      class="btn">Home</a>
-    <a href="submit.html"     class="btn">Submit</a>
-    <a href="listen.html"     class="btn">Listen</a>
+    <a href="index.html" class="btn">Home</a>
+    <a href="submit.html" class="btn">Submit</a>
+    <a href="blog.html" class="btn">Blog</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html"      class="btn">Admin</a>
+    <a href="admin.html" class="btn">Admin</a>
   </nav>
 
   <h1>WYRM Blog</h1>
-  <main id="posts-container">
-    <p>Loading posts…</p>
-  </main>
+  <main id="posts-container">Loading posts…</main>
   <footer>© WYRM Collective</footer>
 </body>
 </html>
