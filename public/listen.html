@@ -2,11 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src  'self' https://cdn.jsdelivr.net https://w.soundcloud.com;
+          connect-src 'self';
+          style-src   'self' https://cdn.jsdelivr.net 'unsafe-inline';
+          frame-src   https://w.soundcloud.com;
+          img-src     'self' data:;
+        ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Music By WYRM</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flickity@2/dist/flickity.min.css">
-  <script src="https://w.soundcloud.com/player/api.js"></script>
+  <script src="https://w.soundcloud.com/player/api.js" defer></script>
 </head>
 <body>
   <nav>
@@ -16,7 +25,7 @@
     <a href="beatbattle.html" class="btn">Beat Battle</a>
     <a href="admin.html"      class="btn">Admin</a>
   </nav>
-
+  
   <h2>Music By WYRM</h2>
   <!-- Flickity carousel -->
   <div class="carousel js-flickity"
