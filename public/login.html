@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- CSP meta -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://www.googleapis.com https://identitytoolkit.googleapis.com 'unsafe-eval';
+    connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob:;
+    frame-src https://w.soundcloud.com;
+  ">
   <meta charset="UTF-8">
-  <title>Admin Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Sign-In</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- 1) Compat SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"    defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"   defer></script>
-
-  <!-- 2) Config -->
-  <script src="js/firebase-config.js" defer></script>
-
-  <!-- 3) Your login logic -->
-  <script src="js/login.js" defer></script>
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="login.js"></script>
 </head>
 <body>
   <main class="login-container">

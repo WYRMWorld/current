@@ -1,48 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src  'self'
-                      https://www.gstatic.com
-                      https://www.googleapis.com
-                      https://cdn.jsdelivr.net
-                      https://w.soundcloud.com
-                      'unsafe-eval';
-          connect-src 'self'
-                      https://firestore.googleapis.com
-                      https://www.googleapis.com;
-          style-src   'self' 'unsafe-inline';
-          img-src     'self' data: blob:;
-          frame-src   https://w.soundcloud.com;
-        ">
+  <!-- CSP meta -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://www.googleapis.com 'unsafe-eval';
+    connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: blob:;
+    frame-src https://w.soundcloud.com;
+  ">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Beat Battle</title>
   <link rel="stylesheet" href="style.css">
 
-  <!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"      defer></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"   defer></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"      defer></script>
-
-  <!-- Init & battle loader -->
-  <script src="js/firebase-config.js" defer></script>
-  <script src="js/beatbattle.js"     defer></script>
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="beatbattle.js"></script>
 </head>
 <body>
-  <nav>
-    <a href="index.html"      class="btn">Home</a>
-    <a href="submit.html"     class="btn">Submit</a>
-    <a href="listen.html"     class="btn">Listen</a>
-    <a href="blog.html"       class="btn">Blog</a>
-    <a href="admin.html"      class="btn">Admin</a>
-  </nav>
-
-  <header><h1>Current Beat Battle</h1></header>
-  <main id="battle-container"></main>
+  <nav>…</nav>
+  <header><h1>Beat Battle</h1></header>
+  <main id="battle-container">Loading…</main>
   <footer>© WYRM Collective</footer>
 </body>
 </html>

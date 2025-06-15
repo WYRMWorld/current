@@ -1,6 +1,9 @@
-// public/js/firebase-config.js
+// public/firebase-config.js
+import { initializeApp }        from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+import { getAuth }              from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
+import { getFirestore }         from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
+import { getStorage }           from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js';
 
-// Your Firebase config
 const firebaseConfig = {
   apiKey:            "AIzaSyDHnyLP2EWkPPD3c4JVVGjUphYKASoVEkI",
   authDomain:        "wyrm-collective.firebaseapp.com",
@@ -11,11 +14,7 @@ const firebaseConfig = {
   measurementId:     "G-E9FPEBEMMX"
 };
 
-// Initialize Firebase compat SDK
-firebase.initializeApp(firebaseConfig);
-
-// Expose auth & db globally
-window.auth = firebase.auth();
-window.db   = firebase.firestore();
-window.storage = firebase.storage();
-</script>
+export const app     = initializeApp(firebaseConfig);
+export const auth    = getAuth(app);
+export const db      = getFirestore(app);
+export const storage = getStorage(app);
