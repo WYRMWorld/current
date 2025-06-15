@@ -9,15 +9,17 @@
           connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com;
           style-src   'self' 'unsafe-inline';
           img-src     'self' data: blob:;
+          frame-src   https://w.soundcloud.com https://www.gstatic.com;
         ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js" defer></script>
+  <!-- Firebase SDKs (v9) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"      defer></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"   defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"      defer></script>
 </head>
 <body>
   <nav>
@@ -27,7 +29,7 @@
     <a href="blog.html"       class="btn">Blog</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
   </nav>
-
+  
   <h2>Admin Dashboard</h2>
 
   <!-- Feedback Queue -->
@@ -73,9 +75,9 @@
     <ul id="archive-list"></ul>
   </details>
 
-  <script src="js/firebase-config.js"  defer></script>
-  <script src="js/admin.js"            defer></script>
-  <script src="js/admin-blog.js"       defer></script>
-  <script src="js/admin-beatbattle.js" defer></script>
+  <script src="js/firebase-config.js"      defer></script>
+  <script src="js/admin.js"                defer></script>
+  <script src="js/admin-blog.js"           defer></script>
+  <script src="js/admin-beatbattle.js"     defer></script>
 </body>
 </html>
