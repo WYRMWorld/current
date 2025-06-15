@@ -2,22 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src  'self' https://www.gstatic.com 'unsafe-eval';
-          style-src   'self' 'unsafe-inline';
-          img-src     'self' data:;
-          connect-src 'self' https://www.googleapis.com;
-        ">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin Login</title>
   <link rel="stylesheet" href="style.css">
 
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"   defer></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"  defer></script>
+  <!-- 1) Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"    defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"   defer></script>
+
+  <!-- 2) Config -->
   <script src="js/firebase-config.js" defer></script>
-  <script src="js/login.js"         defer></script>
+
+  <!-- 3) Your login logic -->
+  <script src="js/login.js" defer></script>
 </head>
 <body>
   <main class="login-container">

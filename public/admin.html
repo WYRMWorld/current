@@ -1,53 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Admin Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 
-  <!-- 1) CSP META (must come first) -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self'
-      https://www.gstatic.com
-      https://www.googleapis.com
-      https://cdn.jsdelivr.net
-      https://w.soundcloud.com
-      'unsafe-eval';
-    connect-src 'self'
-      https://firestore.googleapis.com
-      https://www.googleapis.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: blob:;
-    frame-src https://w.soundcloud.com;
-  ">
+  <!-- 1) Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"       defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"      defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"   defer></script>
 
-  <!-- 2) Firebase compat SDKs -->
-  <script
-    src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"
-    defer
-  ></script>
-  <script
-    src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"
-    defer
-  ></script>
-  <script
-    src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"
-    defer
-  ></script>
-  <script
-    src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"
-    defer
-  ></script>
-
-  <!-- 3) Your config + admin logic -->
-  <script src="js/firebase-config.js" defer></script>
-  <script src="js/admin.js"             defer></script>
-  <script src="js/admin-beatbattle.js"  defer></script>
-  <script src="js/admin-blog.js"        defer></script>
+  <!-- 2) Config + your admin logic -->
+  <script src="js/firebase-config.js"     defer></script>
+  <script src="js/admin.js"               defer></script>
+  <script src="js/admin-blog.js"          defer></script>
+  <script src="js/admin-beatbattle.js"    defer></script>
 </head>
-
 <body>
   <nav>
     <a href="index.html"      class="btn">Home</a>
@@ -59,58 +29,35 @@
   </nav>
 
   <h1>WYRM Admin Dashboard</h1>
-
-  <!-- Feedback queue -->
-  <section id="feedback-queue" class="admin-section">
+  <section id="feedback-queue">
     <h2>Feedback Queue</h2>
     <button id="next-feedback">Next Feedback</button>
-    <table id="feedback-list">
-      <thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead>
-      <tbody></tbody>
-    </table>
+    <table id="feedback-list"><thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead><tbody></tbody></table>
   </section>
 
-  <!-- Beat Battle queue -->
-  <section id="beatbattle-queue" class="admin-section">
+  <section id="battle-queue">
     <h2>Beat Battle Queue</h2>
     <button id="next-battle">Next Battle</button>
-    <table id="battle-list">
-      <thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <button id="reset-battle" class="danger">Reset Battle</button>
+    <button id="reset-battle">Reset Battle</button>
+    <table id="battle-list"><thead><tr><th>#</th><th>Name</th><th>File</th></tr></thead><tbody></tbody></table>
   </section>
 
-  <!-- New Blog Post -->
-  <section id="new-blog-post" class="admin-section">
+  <section id="new-blog-post">
     <h2>New Blog Post</h2>
-    <input
-      id="new-post-title"
-      type="text"
-      placeholder="Title"
-    />
-    <textarea
-      id="new-post-content"
-      placeholder="Content"
-    ></textarea>
-    <label for="new-post-media">Attach Media</label>
-    <input
-      id="new-post-media"
-      type="file"
-      accept="image/*,audio/*,video/*"
-    />
-    <button id="submit-post">Publish</button>
-    <button id="cancel-post" type="button">Cancel</button>
-    <div id="post-status" class="status"></div>
+    <input id="title-input" placeholder="Title">
+    <textarea id="content-input" placeholder="Content…"></textarea>
+    <input type="file" id="file-input">
+    <button id="publish">Publish</button>
+    <button id="cancel">Cancel</button>
+    <div id="admin-blog-error" class="error-message"></div>
   </section>
 
-  <!-- Archive viewer -->
-  <section id="archive" class="admin-section">
-    <h2>Archive</h2>
-    <button id="view-archive">View Archived Posts</button>
-    <div id="archive-list"></div>
+  <section id="archive">
+    <button id="toggle-archive">View Archived Posts</button>
+    <div id="archive-container" hidden></div>
   </section>
 
+  <button id="sign-out">Sign Out</button>
   <footer>© WYRM Collective</footer>
 </body>
 </html>
