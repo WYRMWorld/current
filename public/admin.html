@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
@@ -18,6 +17,7 @@
           img-src     'self' data: blob:;
           frame-src   https://w.soundcloud.com;
         ">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="style.css">
@@ -36,12 +36,62 @@
     <a href="blog.html"       class="btn">Blog</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
   </nav>
+
   <h2>Admin Dashboard</h2>
+
   <!-- Feedback Queue -->
-  <div class="queue-section" id="feedback-queue">…</div>
+  <div class="queue-section" id="feedback-queue">
+    <h3>Feedback Queue</h3>
+    <button id="next-feedback">Next Feedback</button>
+    <table class="queue-table">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>File</th><th>Play</th></tr>
+      </thead>
+      <tbody id="feedback-body"></tbody>
+    </table>
+  </div>
+
   <!-- Beat Battle Queue -->
-  <div class="queue-section" id="battle-queue">…</div>
-  <!-- Blog Manager & Battle Manager & Archive as before -->
+  <div class="queue-section" id="battle-queue">
+    <h3>Beat Battle Queue</h3>
+    <button id="next-battle">Next Battle</button>
+    <table class="queue-table">
+      <thead>
+        <tr><th>#</th><th>Name</th><th>File</th><th>Play</th></tr>
+      </thead>
+      <tbody id="battle-body"></tbody>
+    </table>
+  </div>
+
+  <!-- Blog Manager -->
+  <section id="blog-manager">
+    <h3>New Blog Post</h3>
+    <input  id="post-title"   placeholder="Title" class="chatgpt-input">
+    <textarea 
+      id="post-content" 
+      rows="10" 
+      placeholder="Write your post…" 
+      class="chatgpt-input">
+    </textarea>
+    <input type="file" id="post-media" multiple>
+    <button id="publish-post">Publish</button>
+    <div id="blog-error" class="error-message"></div>
+  </section>
+
+  <!-- Beat Battle Admin -->
+  <section id="battle-manager">
+    <h3>Beat Battle Admin</h3>
+    <button id="reset-votes">Reset Votes</button>
+    <div id="battle-error" class="error-message"></div>
+  </section>
+
+  <!-- Archive Dropdown -->
+  <details id="archive-dropdown" class="queue-section">
+    <summary>📁 Archive</summary>
+    <ul id="archive-list"></ul>
+  </details>
+
+  <!-- Init & scripts -->
   <script src="js/firebase-config.js"      defer></script>
   <script src="js/admin.js"                defer></script>
   <script src="js/admin-blog.js"           defer></script>
