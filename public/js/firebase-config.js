@@ -1,7 +1,8 @@
 // public/js/firebase-config.js
-// (Load v9.23.0 SDKs via <script> tags—no analytics module)
 
-// Firebase configuration
+// Fire SDKs are loaded via <script> tags in each HTML page
+
+// Your web app’s Firebase configuration
 const firebaseConfig = {
   apiKey:     "AIzaSyDHnyLP2EWkPPD3c4JVVGjUphYKASoVEkI",
   authDomain: "wyrm-collective.firebaseapp.com",
@@ -11,9 +12,10 @@ const firebaseConfig = {
   appId:      "1:450404872617:web:9644350024fd570d0614b8"
 };
 
-// Initialize
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-// Globals
+
+// Expose the services you need
 const db      = firebase.firestore();
 const storage = firebase.storage();
 const auth    = firebase.auth();
