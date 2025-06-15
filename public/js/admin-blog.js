@@ -1,52 +1,47 @@
-// public/js/admin-blog.js
-// Uses global db, storage, auth
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src  'self'
+                      https://www.gstatic.com
+                      https://www.googleapis.com
+                      https://cdn.jsdelivr.net
+                      https://w.soundcloud.com
+                      'unsafe-eval';
+          connect-src 'self'
+                      https://firestore.googleapis.com
+                      https://www.googleapis.com;
+          style-src   'self' 'unsafe-inline';
+          img-src     'self' data: blob:;
+          frame-src   https://w.soundcloud.com;
+        ">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WYRM Blog</title>
+  <link rel="stylesheet" href="style.css">
 
-auth.onAuthStateChanged(user => {
-  if (!user) window.location = 'login.html';
-});
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"      defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"   defer></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"      defer></script>
 
-document.getElementById('publish-post')
-  .addEventListener('click', async () => {
-    const btn = document.getElementById('publish-post');
-    const err = document.getElementById('blog-error');
-    btn.disabled = true;
-    err.textContent = '';
-    try {
-      const title   = document.getElementById('post-title').value.trim();
-      const content = document.getElementById('post-content').value.trim();
-      const files   = document.getElementById('post-media').files;
-
-      if (!title || !content) {
-        throw new Error("Title and content are required.");
-      }
-
-      // 1) Create Firestore doc with a 'type' field if you ever want to filter
-      const postRef = await db.collection('posts').add({
-        title,
-        content,
-        type: 'blog',                                // ← optional tag
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        mediaUrls: []                                // pre-seed the array
-      });
-      console.log("Created post:", postRef.id);
-
-      // 2) Upload media and collect URLs
-      const mediaUrls = [];
-      for (const f of files) {
-        const storageRef = storage.ref(`posts/${postRef.id}/${f.name}`);
-        await storageRef.put(f);
-        mediaUrls.push(await storageRef.getDownloadURL());
-      }
-
-      // 3) Merge in URLs (use merge: true so you preserve other fields)
-      await postRef.set({ mediaUrls }, { merge: true });
-      console.log("Uploaded media:", mediaUrls);
-
-      err.textContent = 'Post published successfully!';
-    } catch (e) {
-      console.error("Blog publish error:", e);
-      err.textContent = e.message;
-    } finally {
-      btn.disabled = false;
-    }
-  });
+  <!-- Init & Blog loader -->
+  <script src="js/firebase-config.js" defer></script>
+  <script src="js/blog.js"           defer></script>
+</head>
+<body>
+  <nav>
+    <a href="index.html"      class="btn">Home</a>
+    <a href="submit.html"     class="btn">Submit</a>
+    <a href="listen.html"     class="btn">Listen</a>
+    <a href="beatbattle.html" class="btn">Beat Battle</a>
+    <a href="admin.html"      class="btn">Admin</a>
+  </nav>
+  <header><h1>WYRM Blog</h1></header>
+  <main id="posts-container"></main>
+  <footer>© WYRM Collective</footer>
+</body>
+</html>
