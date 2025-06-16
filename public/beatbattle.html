@@ -1,27 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- CSP meta -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://www.googleapis.com 'unsafe-eval';
-    connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: blob:;
-    frame-src https://w.soundcloud.com;
-  ">
   <meta charset="UTF-8">
+  <title>WYRM Beat Battle</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Beat Battle</title>
   <link rel="stylesheet" href="style.css">
 
-  <script type="module" src="firebase-config.js"></script>
-  <script type="module" src="beatbattle.js"></script>
+  <!-- Favicon so you don’t get a 404 -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+  <!-- CSP allowing particles.js -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src  'self' https://www.gstatic.com https://cdn.jsdelivr.net;
+          connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.googleapis.com https://securetoken.googleapis.com;
+          style-src   'self' 'unsafe-inline';
+          img-src     'self' data: blob: https://firebasestorage.googleapis.com;
+          media-src   'self' https://firebasestorage.googleapis.com;
+          frame-src   https://w.soundcloud.com;
+        ">
+
+  <style>
+    /* Full-screen loader */
+    .loader-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-color, #0a0a0a);
+      overflow: hidden;
+      z-index: 998;
+    }
+    #loader-particles {
+      position: absolute;
+      width: 100%; height: 100%;
+      top: 0; left: 0;
+      z-index: 1;
+    }
+    .custom-loader img {
+      width: 120px; height: 120px;
+      animation: pulse 2s infinite ease-in-out;
+      z-index: 2;
+    }
+    .loader-container p {
+      margin-top: 1rem;
+      color: var(--text-color, #eee);
+      font-size: 1.2rem;
+      animation: flicker 3s infinite alternate;
+      z-index: 2;
+    }
+    @keyframes pulse   {0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
+    @keyframes flicker {0%,19%,21%,23%,25%,54%,56%,100%{opacity:1;}20%,24%,55%{opacity:0.3;}}
+
+    /* Track + vote styling */
+    .track { margin:1rem 0; background:var(--card-bg); border-radius:6px; overflow:hidden; }
+    .track-header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:.75rem 1rem; background:var(--card-bg);
+    }
+    .vote-section { display:flex; align-items:center; gap:.5rem; }
+    .vote-bar    { background:#333; width:100%; height:8px; }
+    .vote-fill   { background:var(--accent-green); width:0; height:100%; transition:width .6s ease; }
+
+    /* Leaderboard styling */
+    .leaderboard-section {
+      max-width:800px; margin:2rem auto;
+      background:var(--card-bg); padding:1.5rem; border-radius:8px;
+    }
+    .leaderboard-section h2 {
+      color:var(--accent-green);
+      border-bottom:2px solid var(--accent-pink);
+      padding-bottom:.5rem; margin-bottom:1rem;
+    }
+    .leaderboard-section ul { list-style:none; padding:0; margin:0; }
+    .leaderboard-section li { padding:.5rem 0; border-bottom:1px solid #333; }
+  </style>
 </head>
 <body>
-  <nav>…</nav>
-  <header><h1>Beat Battle</h1></header>
-  <main id="battle-container">Loading…</main>
+  <nav>
+    <a href="index.html"     class="btn">Home</a>
+    <a href="submit.html"    class="btn">Submit</a>
+    <a href="listen.html"    class="btn">Listen</a>
+    <a href="blog.html"      class="btn">Blog</a>
+    <a href="admin.html"     class="btn">Admin</a>
+  </nav>
+
+  <!-- Loader overlay -->
+  <div id="initial-loader" class="loader-container">
+    <div id="loader-particles"></div>
+    <div class="custom-loader">
+      <img src="logo.png" alt="Loading…">
+    </div>
+    <p>Loading battle…</p>
+  </div>
+
+  <header>
+    <h1 id="battle-title">Current Beat Battle</h1>
+  </header>
+
+  <main id="battle-container">
+    <!-- JS will inject tracks & vote bars here -->
+  </main>
+
+  <section id="leaderboards" class="leaderboard-section">
+    <div>
+      <h2>Previous Battle’s Top 3</h2>
+      <ul id="previous-winners-list">
+        <li>Loading…</li>
+      </ul>
+    </div>
+    <div style="margin-top:2rem;">
+      <h2>All-Time Winners</h2>
+      <ul id="all-time-winners-list">
+        <li>Loading…</li>
+      </ul>
+    </div>
+    <div style="margin-top:2rem;">
+      <h2>Most Wins Leader</h2>
+      <p id="most-wins-leader">Loading…</p>
+    </div>
+  </section>
+
   <footer>© WYRM Collective</footer>
+
+  <!-- scripts in original order -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="js/loader-particles.js"></script>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/beatbattle.js"></script>
 </body>
 </html>

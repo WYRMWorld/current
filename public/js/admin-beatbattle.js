@@ -1,92 +1,104 @@
 // public/js/admin-beatbattle.js
-// Uses global db
+import { db } from './firebase-config.js';
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp,
+  doc,
+  writeBatch
+} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
 
-document.getElementById('reset-votes').addEventListener('click', async () => {
-  const btn = document.getElementById('reset-votes');
-  const err = document.getElementById('battle-error');
-  const originalText = btn.textContent;
-  btn.disabled = true;
-  btn.textContent = 'Resetting...';
-  err.textContent = '';
-  try {
-    const snap = await db.collection('beatBattles/current/tracks').get();
-    const batch = db.batch();
-    snap.forEach(d => batch.update(db.doc(`beatBattles/current/tracks/${d.id}`), { votes: 0 }));
-    await batch.commit();
-  } catch (e) {
-    err.textContent = e.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = originalText;
+// EXPORT the initializer that admin.js will call
+export function initializeAdminView() {
+  // --- DOM References ---
+  const createBtn = document.getElementById('create-battle');
+  const endBtn    = document.getElementById('end-battle');
+  const titleEl   = document.getElementById('current-battle-title');
+  const errDiv    = document.getElementById('battle-creation-error');
+  const resetBtn  = document.getElementById('reset-battle-queue');
+
+  let activeBattleId = null;
+
+  // 1) Fetch any in-progress battle
+  async function fetchActiveBattle() {
+    const snap = await getDocs(query(
+      collection(db, 'battles'),
+      where('endedAt', '==', null),
+      orderBy('createdAt', 'desc'),
+      limit(1)
+    ));
+    if (snap.empty) {
+      titleEl.textContent = 'No Active Battle';
+      activeBattleId = null;
+    } else {
+      const d = snap.docs[0];
+      titleEl.textContent = d.data().name;
+      activeBattleId = d.id;
+    }
   }
-});
-// public/js/admin-beatbattle.js
 
-// DOM refs
-const nextBtn      = document.getElementById("next-battle");
-const battleList   = document.getElementById("battle-list");
-const archiveList  = document.getElementById("archive-list");
-
-// Firestore refs
-const queueCol   = db.collection("queues").doc("beatBattle");
-const archiveCol = db.collection("queues").doc("beatBattleArchive");
-
-// On “Next Battle” click:
-nextBtn.addEventListener("click", async () => {
-  // 1) Pull the next queued track (simplified)
-  const snapshot = await queueCol.collection("items")
-                                   .orderBy("enqueuedAt")
-                                   .limit(1)
-                                   .get();
-
-  if (snapshot.empty) return;
-
-  const doc = snapshot.docs[0];
-  const data = doc.data();
-
-  // 2) Move it into your archive
-  await archiveCol.collection("items").add({
-    ...data,
-    archivedAt: firebase.firestore.FieldValue.serverTimestamp()
+  // 2) Create a new battle
+  createBtn.addEventListener('click', async () => {
+    errDiv.textContent = '';
+    try {
+      const name = `Battle – ${new Date().toLocaleDateString('en-US', {
+        month: 'long', day: 'numeric', year: 'numeric'
+      })}`;
+      const newDoc = await addDoc(collection(db, 'battles'), {
+        name,
+        createdAt: serverTimestamp(),
+        endedAt: null
+      });
+      activeBattleId = newDoc.id;
+      titleEl.textContent = name;
+    } catch (e) {
+      console.error(e);
+      errDiv.textContent = e.message;
+    }
   });
 
-  // 3) Remove it from the live queue
-  await doc.ref.delete();
-
-  // 4) Re-render both lists
-  renderBattleQueue();
-  renderArchiveList();
-});
-
-// Renders the current battle queue
-async function renderBattleQueue() {
-  const snap = await queueCol.collection("items")
-                             .orderBy("enqueuedAt")
-                             .get();
-  battleList.innerHTML = "";
-  snap.forEach(doc => {
-    const d = doc.data();
-    battleList.innerHTML += `<tr>
-      <td>${d.trackName}</td><td><a href="${d.url}" target="_blank">▶️</a></td>
-    </tr>`;
+  // 3) End & crown the current battle
+  endBtn.addEventListener('click', async () => {
+    if (!activeBattleId) return;
+    errDiv.textContent = '';
+    try {
+      await updateDoc(doc(db, 'battles', activeBattleId), {
+        endedAt: serverTimestamp()
+      });
+      await fetchActiveBattle();
+    } catch (e) {
+      console.error(e);
+      errDiv.textContent = e.message;
+    }
   });
+
+  // 4) Clear all submissions for the active battle
+  resetBtn.addEventListener('click', async () => {
+    if (!activeBattleId) return;
+    if (!confirm(`Clear all submissions from "${titleEl.textContent}"?`)) return;
+    errDiv.textContent = '';
+    try {
+      const itemsSnap = await getDocs(collection(db, 'battles', activeBattleId, 'items'));
+      if (itemsSnap.empty) {
+        errDiv.textContent = 'Queue is already empty.';
+        return;
+      }
+      const batch = writeBatch(db);
+      itemsSnap.docs.forEach(d => batch.delete(d.ref));
+      await batch.commit();
+    } catch (e) {
+      console.error(e);
+      errDiv.textContent = e.message;
+    }
+  });
+
+  // 5) Kick it all off
+  fetchActiveBattle();
 }
-
-// Renders the archived tracks
-async function renderArchiveList() {
-  const snap = await archiveCol.collection("items")
-                                .orderBy("archivedAt", "desc")
-                                .get();
-  archiveList.innerHTML = "";
-  snap.forEach(doc => {
-    const d = doc.data();
-    const li = document.createElement("li");
-    li.innerHTML = `${new Date(d.archivedAt.toDate()).toLocaleString()}: 
-      <a href="${d.url}" target="_blank">${d.trackName}</a>`;
-    archiveList.appendChild(li);
-  });
-}
-
-// Initial load
-renderBattleQueue();
-renderArchiveList();

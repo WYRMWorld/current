@@ -8,7 +8,7 @@ const firebaseConfig = {
   apiKey:            "AIzaSyDHnyLP2EWkPPD3c4JVVGjUphYKASoVEkI",
   authDomain:        "wyrm-collective.firebaseapp.com",
   projectId:         "wyrm-collective",
-  storageBucket:     "wyrm-collective.appspot.com",
+  storageBucket:     "wyrm-collective.firebasestorage.app",
   messagingSenderId: "450404872617",
   appId:             "1:450404872617:web:9644350024fd570d0614b8",
   measurementId:     "G-E9FPEBEMMX"

@@ -2,15 +2,29 @@ rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // Allow anyone to fetch/view post media
-    match /postMedia/{mediaPath=**} {
-      allow read:  if true;
-      allow write: if request.auth != null;
+    // 1) Public reads everywhere
+    match /{allPaths=**} {
+      allow read;
     }
 
-    // Deny everything else
-    match /{allPaths=**} {
-      allow read, write: if false;
+    // 2) Battle uploads — your beatbattle.js / submit.js writes here
+    match /battles/{battleId}/tracks/{fileName} {
+      allow write;    // anyone can upload into this folder
+    }
+
+    // 3) Feedback uploads — your submit.js writes here
+    match /queues/feedback/{fileName} {
+      allow write;    // anyone can upload feedback tracks
+    }
+
+    // 4) If you’re using a "submissions" path in submit.js (e.g. for both queues)
+    match /submissions/{queueType}/{fileName} {
+      allow write;    // anyone can upload here, too
+    }
+
+    // 5) (Optional) Blog media uploads
+    match /blogMedia/{fileName} {
+      allow write: if request.auth != null;  // only logged-in admins can upload blog media
     }
   }
 }

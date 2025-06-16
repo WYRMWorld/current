@@ -2,42 +2,127 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src  'self';
-          style-src   'self' 'unsafe-inline';
-          img-src     'self' data:;
-          connect-src 'self';
-        ">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Submit</title>
   <link rel="stylesheet" href="style.css">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.googleapis.com https://securetoken.googleapis.com https://firebasestorage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://firebasestorage.googleapis.com; frame-src https://w.soundcloud.com;">
+  <style>
+    .loader-container {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 998; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      background-color: var(--bg-color, #0a0a0a); overflow: hidden;
+    }
+    .custom-loader img {
+      width: 120px; height: 120px; animation: pulse 2s ease-in-out infinite;
+      z-index: 2; position: relative;
+    }
+    .loader-container p {
+      margin-top: 1.5rem; color: var(--text-color, #eee);
+      animation: flicker 3s infinite alternate; font-size: 1.2rem; z-index: 2;
+    }
+    #loader-particles {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; z-index: 1;
+    }
+    /* New styles for the live queue display */
+    .live-queues-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 3rem;
+      justify-content: center;
+    }
+    .queue-display {
+      flex: 1;
+      min-width: 300px;
+      max-width: 500px;
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .queue-display h3 {
+      color: var(--accent-green);
+      margin-top: 0;
+      border-bottom: 1px solid var(--accent-pink);
+      padding-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body>
   <nav>
-    <a href="index.html"      class="btn">Home</a>
-    <a href="listen.html"     class="btn">Listen</a>
-    <a href="blog.html"       class="btn">Blog</a>
+    <a href="index.html" class="btn">Home</a>
+    <a href="listen.html" class="btn">Listen</a>
+    <a href="blog.html" class="btn">Blog</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html"      class="btn">Admin</a>
+    <a href="admin.html" class="btn">Admin</a>
   </nav>
-  <h2>Submit Your Track</h2>
-  <main class="form-container">
-    <form action="/submit" method="POST" enctype="multipart/form-data">
-      <label>Name:</label>
-      <input type="text" name="name" required>
-      <label>Track File:</label>
-      <input type="file" name="track" accept=".wav,.mp3" required>
-      <fieldset>
-        <legend>Queue Type</legend>
-        <label><input type="radio" name="type" value="feedback" checked> Feedback</label>
-        <label><input type="radio" name="type" value="battle"> Beat Battle</label>
-      </fieldset>
-      <button class="btn-primary" type="submit">Join Queue</button>
-    </form>
-  </main>
-  <script src="js/submit.js" defer></script>
+
+  <div id="page-content">
+    <h2>Submit Your Track</h2>
+    <main class="form-container">
+      <form id="submit-form">
+        <label>Name:</label>
+        <input type="text" name="name" id="submit-name" required>
+        <label>Track File:</label>
+        <input type="file" name="track" id="submit-track" accept=".wav,.mp3" required>
+        <fieldset>
+          <legend>Queue Type</legend>
+          <label><input type="radio" name="type" value="feedback" checked> Feedback</label>
+          <label><input type="radio" name="type" value="beatBattle"> Beat Battle</label>
+        </fieldset>
+        <button class="btn-primary" type="submit">Join Queue</button>
+        <div id="submit-status" style="margin-top: 1rem;"></div>
+      </form>
+    </main>
+
+    <!-- New Live Queue Display Sections -->
+    <div class="live-queues-container">
+      <div id="feedback-queue-display" class="queue-display">
+        <h3>Live Feedback Queue</h3>
+        <table class="queue-table">
+          <thead>
+            <tr>
+              <th style="width: 10%;">#</th>
+              <th>Name</th>
+              <th>File</th>
+            </tr>
+          </thead>
+          <tbody id="feedback-queue-body">
+            <tr><td colspan="3">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="beatbattle-queue-display" class="queue-display">
+        <h3>Live Beat Battle Queue</h3>
+        <table class="queue-table">
+          <thead>
+            <tr>
+              <th style="width: 10%;">#</th>
+              <th>Name</th>
+              <th>File</th>
+            </tr>
+          </thead>
+          <tbody id="beatbattle-queue-body">
+            <tr><td colspan="3">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div id="initial-loader" class="loader-container" style="display: none;">
+    <div id="loader-particles"></div>
+    <div class="custom-loader">
+      <img src="logo.png" alt="Loading..." />
+    </div>
+    <p>Submitting...</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script src="js/loader-particles.js"></script>
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/submit.js"></script>
 </body>
 </html>
-<!--   <footer>© WYRM Collective</footer> -->

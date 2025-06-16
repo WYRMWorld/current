@@ -88,10 +88,58 @@ nav .btn:hover {
   margin: 2rem 0;
   animation: flicker 3s infinite;
 }
-@keyframes flicker {
-  0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
-  20%,24%,55%                   { opacity: 0.2; }
+
+/* --------------------------------------------------
+   LOADER STYLES (Includes fix for pulsating logo)
+   -------------------------------------------------- */
+.loader-container {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 998; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    background-color: var(--bg-color, #0a0a0a); overflow: hidden;
+    /* New styles for a smooth fade-out effect */
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
 }
+
+.loader-container.hidden {
+    opacity: 0;
+    pointer-events: none; /* Prevents clicking on the loader as it fades */
+}
+
+.custom-loader img {
+    width: 120px;
+    height: 120px;
+    animation: pulse 2s ease-in-out infinite; /* This is the key animation */
+    z-index: 2;
+    position: relative;
+}
+.loader-container p {
+    margin-top: 1.5rem;
+    color: var(--text-color, #eee);
+    animation: flicker 3s infinite alternate;
+    font-size: 1.2rem;
+    z-index: 2;
+}
+#loader-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Keyframe Animations */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+@keyframes flicker {
+    0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+    20%,24%,55%                   { opacity: 0.2; }
+}
+
 
 /* --------------------------------------------------
    Features grid
@@ -125,7 +173,6 @@ nav .btn:hover {
   padding: 2rem 0;
   overflow: hidden;
 }
-/* Square cells restored */  
 .carousel-cell {
   flex: 0 0 300px;
   width: 300px;
@@ -142,7 +189,6 @@ nav .btn:hover {
   border: none;
   pointer-events: none; /* so drag works */  
 }
-/* Hide Flickity scrollbars */
 .carousel .flickity-viewport {
   overflow: hidden !important;
   scrollbar-width: none;
@@ -150,9 +196,7 @@ nav .btn:hover {
 .carousel .flickity-viewport::-webkit-scrollbar {
   display: none;
 }
-
 .track-scroll {
-  /* if you use manual scroll instead of Flickity */
   display: flex;
   overflow: hidden;
   cursor: grab;
@@ -306,22 +350,143 @@ nav .btn:hover {
    ————————————————————————————————————— */
 #new-blog-post textarea {
   width: 100%;
-  min-height: 8em;          /* make it tall by default */
-  padding: 0.75em;          /* comfy padding inside */
-  border-radius: 0.5em;     /* rounded corners */
+  min-height: 8em;
+  padding: 0.75em;
+  border-radius: 0.5em;
   border: 1px solid var(--card-hover);
   font-family: inherit;
   font-size: 1rem;
-  resize: vertical;         /* user can drag to resize taller */
+  resize: vertical;
   box-sizing: border-box;
   margin-bottom: 0.75em;
 }
 
-/* file-picker & buttons */
 #new-blog-post input[type="file"] {
   display: block;
   margin-bottom: 1rem;
 }
 #new-blog-post button {
   margin-right: 0.5rem;
+}
+
+/* make every admin-section look like a card */
+.admin-section {
+  background: var(--card-bg);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* style the Danger Zone dropdown */
+#danger-zone-dropdown {
+  border-color: var(--accent-pink);
+  background-color: #1a1111;
+}
+#danger-zone-dropdown summary {
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--accent-pink);
+  margin-bottom: 0.75rem;
+  outline: none;
+}
+#danger-zone-dropdown[open] {
+  padding-bottom: 1rem;
+}
+/* space out the inner contents */
+#danger-zone-dropdown > p,
+#danger-zone-dropdown > button,
+#danger-zone-dropdown > .error-message {
+  margin-top: 0.75rem;
+  display: block;
+}
+
+/* flex side-by-side for live queues */
+.queue-container {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* universal admin-section card */
+.admin-section {
+  background: var(--card-bg);
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 1.5rem;
+  flex: 1;                 /* allow side-by-side to share space */
+  min-width: 300px;
+}
+
+/* headings: green text with pink underline */
+.admin-section h2 {
+  font-size: 1.25rem;
+  color: var(--accent-green);
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid var(--accent-pink);
+}
+
+/* tables inside admin-sections */
+.admin-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.admin-section th,
+.admin-section td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #333;
+  text-align: left;
+}
+
+/* Danger Zone dropdown tweaks */
+#danger-zone-dropdown summary {
+  font-size: 1.25rem;
+  color: var(--accent-pink);
+  cursor: pointer;
+  margin-bottom: 0.75rem;
+  list-style: none;
+}
+#danger-zone-dropdown p,
+#danger-zone-dropdown button,
+#danger-zone-dropdown .error-message {
+  margin-top: 0.5rem;
+}
+
+/* --------------------------------------------------
+   Vote bars under each track
+   -------------------------------------------------- */
+.track {
+  position: relative;
+  margin-bottom: 1.5rem;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.track-header {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--card-bg);
+}
+.vote-section { display: flex; align-items: center; gap: 0.5rem; }
+.vote-bar {
+  background: #2a2a2a;
+  height: 8px;
+  width: 100%;
+}
+.vote-fill {
+  background: var(--accent-green);
+  height: 100%;
+  width: 0;
+  transition: width 0.6s ease;
+}
+
+/* disable cursor on already-voted buttons */
+.vote-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }

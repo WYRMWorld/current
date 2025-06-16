@@ -1,9 +1,10 @@
 {
   "firestore": {
-    "database": "(default)",
-    "location": "nam5",
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   },
   "hosting": {
     "public": "public",
@@ -11,20 +12,6 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "headers": [
-      {
-        "source": "**/*.html",
-        "headers": [
-          {
-            "key": "Content-Security-Policy",
-            "value": "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://www.soundcloud.com https://www.gstatic.com; connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; frame-src https://www.soundcloud.com;"
-          }
-        ]
-      }
     ]
-  },
-  "storage": {
-    "rules": "storage.rules"
   }
 }

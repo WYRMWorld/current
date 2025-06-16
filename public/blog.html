@@ -1,33 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- CSP meta -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net https://www.googleapis.com 'unsafe-eval';
-    connect-src 'self' https://firestore.googleapis.com https://www.googleapis.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' data: blob:;
-    frame-src https://w.soundcloud.com;
-  ">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRM Blog</title>
   <link rel="stylesheet" href="style.css">
-
-  <script type="module" src="firebase-config.js"></script>
-  <script type="module" src="blog.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.googleapis.com https://securetoken.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://firebasestorage.googleapis.com; frame-src https://w.soundcloud.com;">
+  <!-- Styles for the full-screen particle loader -->
+  <style>
+    .loader-container {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 998; display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      background-color: var(--bg-color, #0a0a0a); overflow: hidden;
+    }
+    nav { position: relative; z-index: 999; }
+    .custom-loader img {
+      width: 120px; height: 120px; animation: pulse 2s ease-in-out infinite;
+      z-index: 2; position: relative;
+    }
+    .loader-container p {
+      margin-top: 1.5rem; color: var(--text-color, #eee);
+      animation: flicker 3s infinite alternate; font-size: 1.2rem; z-index: 2;
+    }
+    #loader-particles {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; z-index: 1;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes flicker {
+      0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
+      20%,24%,55% { opacity: 0.3; }
+    }
+  </style>
 </head>
 <body>
   <nav>
-    <a href="index.html"      class="btn">Home</a>
-    <a href="submit.html"     class="btn">Submit</a>
+    <a href="index.html" class="btn">Home</a>
+    <a href="submit.html" class="btn">Submit</a>
     <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html"      class="btn">Admin</a>
+    <a href="admin.html" class="btn">Admin</a>
   </nav>
 
+  <div id="initial-loader" class="loader-container">
+      <div id="loader-particles"></div>
+      <div class="custom-loader">
+        <img src="logo.png" alt="Loading..." />
+      </div>
+      <p>Loading posts…</p>
+  </div>
+
   <header><h1>WYRM Blog</h1></header>
-  <main id="posts-container">Loading posts…</main>
+  <main id="posts-container">
+    <!-- Blog posts will be populated here -->
+  </main>
+  
+  <div id="load-more-container" style="text-align: center; padding: 2rem;"></div>
+  
   <footer>© WYRM Collective</footer>
+
+  <!-- SCRIPT ORDERING IS NOW GUARANTEED -->
+
+  <!-- 1. Particle.js Library (regular script) -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+  <!-- 2. Particle Configuration Script (CORRECTED PATH) -->
+  <script src="js/loader-particles.js"></script>
+
+  <!-- 3. Firebase and main page scripts (as modules, they will wait for regular scripts to finish) -->
+  <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/blog.js"></script>
+  
 </body>
 </html>

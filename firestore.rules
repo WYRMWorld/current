@@ -1,36 +1,61 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Blog posts collection
-    match /posts/{postId} {
-      // Anyone can read
+
+    // Helper function to check if the user is the designated admin.
+    function isAdmin() {
+      // IMPORTANT: Replace with your actual Firebase User ID.
+      return request.auth != null
+          && request.auth.uid == "1rnngUpU4eQY8SQMST6eTymcPu73";
+    }
+
+    // --- General Collections ---
+    match /posts/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /winners/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /battleHistory/{docId} {
+      allow read, write: if isAdmin();
+    }
+
+    // --- Queues & Archives Collection Group ---
+    match /queues/{queue}/{itemId=**} {
+      // Allow ANYONE to submit a new track.
+      allow create: if queue == 'feedback' || queue == 'beatBattle';
+
+      // Allow ANYONE to read the tracks in BOTH live queues.
+      allow read: if queue == 'feedback' || queue == 'beatBattle';
+
+      // ADMIN has full access to ALL queues and archives.
+      allow read, write, delete: if isAdmin();
+
+      // Voting: Anyone may increment votes on 'beatBattle' items only.
+      allow update: if queue == 'beatBattle'
+                 && request.resource.data.votes == resource.data.votes + 1
+                 && request.resource.data.keys().hasOnly(['votes']);
+    }
+
+    // --- New Battles Schema ---
+    match /battles/{battleId} {
+      // Public can list battles
       allow read: if true;
-      // Only signed-in users can create/update/delete
-      allow write: if request.auth != null;
-    }
+      // Only ADMIN can create/end (update) or delete battle documents
+      allow create, update, delete: if isAdmin();
 
-    // 2) FEEDBACK QUEUE
-    // Only your Admin (signed in) needs to read/write
-    match /feedback/{fbId} {
-      allow read, write: if request.auth != null;
-    }
-
-    // 3) BEAT BATTLE QUEUE
-    // Only your Admin (signed in) needs to read/write
-    match /beatbattle/{bbId} {
-      allow read, write: if request.auth != null;
-    }
-
-    // 4) ARCHIVE (optional)
-    match /archive/{doc=**} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    // 5) lock everything else down
-    match /{document=**} {
-      allow read:  if false;
-      allow write: if false;
+      // Each battle has its own `items` subcollection
+      match /items/{itemId} {
+        // Anyone can read submissions
+        allow read: if true;
+        // Anyone can submit into the active battle
+        allow create: if true;
+        // Anyone can vote (increment only)
+        allow update: if request.resource.data.votes == resource.data.votes + 1
+                   && request.resource.data.keys().hasOnly(['votes']);
+        // Only ADMIN can delete items
+        allow delete: if isAdmin();
+      }
     }
   }
 }
