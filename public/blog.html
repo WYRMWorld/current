@@ -6,7 +6,6 @@
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.googleapis.com https://securetoken.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://firebasestorage.googleapis.com; frame-src https://w.soundcloud.com;">
-  <!-- Styles for the full-screen particle loader -->
   <style>
     .loader-container {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -39,11 +38,13 @@
 </head>
 <body>
   <nav>
-    <a href="index.html" class="btn">Home</a>
-    <a href="submit.html" class="btn">Submit</a>
-    <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html" class="btn">Admin</a>
+    <a href="index.html" class="nav-btn">Home</a>
+    <a href="listen.html" class="nav-btn">Listen</a>
+    <a href="submit.html" class="nav-btn">Submit</a>
+    <a href="beatbattle.html" class="nav-btn">Beat Battle</a>
+    <a href="admin.html" class="nav-btn">Admin</a>
   </nav>
+  <div class="nav-underline"></div>
 
   <div id="initial-loader" class="loader-container">
       <div id="loader-particles"></div>
@@ -52,25 +53,20 @@
       </div>
       <p>Loading posts…</p>
   </div>
-
-  <header><h1>WYRM Blog</h1></header>
-  <main id="posts-container">
-    <!-- Blog posts will be populated here -->
-  </main>
   
-  <div id="load-more-container" style="text-align: center; padding: 2rem;"></div>
-  
-  <footer>© WYRM Collective</footer>
+  <div class="content-wrapper">
+    <h1 class="page-title">WYRM Blog</h1>
+    <main id="posts-container">
+      </main>
+    <div id="load-more-container" style="text-align: center; padding: 2rem;">
+        </div>
+    <footer>© WYRM Collective</footer>
+  </div>
 
-  <!-- SCRIPT ORDERING IS NOW GUARANTEED -->
-
-  <!-- 1. Particle.js Library (regular script) -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 
-  <!-- 2. Particle Configuration Script (CORRECTED PATH) -->
   <script src="js/loader-particles.js"></script>
 
-  <!-- 3. Firebase and main page scripts (as modules, they will wait for regular scripts to finish) -->
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/blog.js"></script>
   

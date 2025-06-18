@@ -2,54 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"
-        content="
-          default-src 'self';
-          script-src  'self' https://cdn.jsdelivr.net;
-          style-src   'self' 'unsafe-inline';
-          img-src     'self' data:;
-          connect-src 'self';
-        ">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>WYRMWorld</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="style.css">
-
-  <!-- Particles.js -->
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
-  <script src="js/particles-init.js" defer></script>
+  <script src="/js/aurora-bg.js"></script>
 </head>
-<body>
-  <div id="particles-js"></div>
-  <div class="hero-area">
-    <nav>
-      <a href="submit.html"     class="btn">Submit</a>
-      <a href="listen.html"     class="btn">Listen</a>
-      <a href="blog.html"       class="btn">Blog</a>
-      <a href="beatbattle.html" class="btn">Beat Battle</a>
-      <a href="admin.html"      class="btn">Admin</a>
-    </nav>
-    <h1 class="flicker-title">WYRM</h1>
-    <section class="hero">
-      <a href="submit.html"     class="btn">Submit</a>
-      <a href="listen.html"     class="btn">Listen</a>
-      <a href="blog.html"       class="btn">Blog</a>
-      <a href="beatbattle.html" class="btn">Beat Battle</a>
-      <a href="admin.html"      class="btn">Admin</a>
-    </section>
-    <section class="features">
-      <div class="feature">
-        <h3>Submit Tracks</h3>
+<body class="home-page">
+  <canvas id="neon-orbs-bg"></canvas>
+  <nav>
+    <a href="submit.html" class="nav-btn">Submit</a>
+    <a href="listen.html" class="nav-btn">Listen</a>
+    <a href="blog.html" class="nav-btn">Blog</a>
+    <a href="beatbattle.html" class="nav-btn">Beat Battle</a>
+    <a href="admin.html" class="nav-btn">Admin</a>
+  </nav>
+  <div class="nav-underline"></div>
+  <main>
+    <h1 class="wyrm-title">WYRM</h1>
+    <div class="main-btn-row">
+      <a href="submit.html" class="main-action-btn">Submit</a>
+      <a href="listen.html" class="main-action-btn">Listen</a>
+      <a href="blog.html" class="main-action-btn">Blog</a>
+      <a href="beatbattle.html" class="main-action-btn">Beat Battle</a>
+      <a href="admin.html" class="main-action-btn">Admin</a>
+    </div>
+    <div class="feature-row">
+      <div class="feature-card">
+        <div class="feature-header">Submit Tracks</div>
+        <div class="feature-divider"></div>
         <p>Upload your track for exposure and feedback or battle.</p>
       </div>
-      <div class="feature">
-        <h3>Get Feedback</h3>
+      <div class="feature-card">
+        <div class="feature-header">Get Feedback</div>
+        <div class="feature-divider"></div>
         <p>Receive detailed critiques to refine your sound.</p>
       </div>
-      <div class="feature">
-        <h3>Join Battles</h3>
+      <div class="feature-card">
+        <div class="feature-header">Join Battles</div>
+        <div class="feature-divider"></div>
         <p>Compete live and showcase your talent.</p>
       </div>
-    </section>
-  </div>
+    </div>
+  </main>
 </body>
 </html>

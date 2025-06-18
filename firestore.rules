@@ -2,59 +2,41 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper function to check if the user is the designated admin.
     function isAdmin() {
-      // IMPORTANT: Replace with your actual Firebase User ID.
-      return request.auth != null
-          && request.auth.uid == "1rnngUpU4eQY8SQMST6eTymcPu73";
+      return request.auth != null && request.auth.uid == "1rnngUpU4eQY8SQMST6eTymcPu73";
+    }
+    
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    // --- General Collections ---
-    match /posts/{docId} {
-      allow read, write: if isAdmin();
-    }
-    match /winners/{docId} {
-      allow read, write: if isAdmin();
-    }
-    match /battleHistory/{docId} {
-      allow read, write: if isAdmin();
-    }
-
-    // --- Queues & Archives Collection Group ---
-    match /queues/{queue}/{itemId=**} {
-      // Allow ANYONE to submit a new track.
-      allow create: if queue == 'feedback' || queue == 'beatBattle';
-
-      // Allow ANYONE to read the tracks in BOTH live queues.
-      allow read: if queue == 'feedback' || queue == 'beatBattle';
-
-      // ADMIN has full access to ALL queues and archives.
-      allow read, write, delete: if isAdmin();
-
-      // Voting: Anyone may increment votes on 'beatBattle' items only.
-      allow update: if queue == 'beatBattle'
-                 && request.resource.data.votes == resource.data.votes + 1
-                 && request.resource.data.keys().hasOnly(['votes']);
-    }
-
-    // --- New Battles Schema ---
+    match /posts/{docId}         { allow read: if true; allow write: if isAdmin(); }
+    match /winners/{docId}       { allow read: if true; allow write: if isAdmin(); }
+    match /battleHistory/{docId} { allow read: if true; allow write: if isAdmin(); }
+    
     match /battles/{battleId} {
-      // Public can list battles
       allow read: if true;
-      // Only ADMIN can create/end (update) or delete battle documents
       allow create, update, delete: if isAdmin();
-
-      // Each battle has its own `items` subcollection
       match /items/{itemId} {
-        // Anyone can read submissions
         allow read: if true;
-        // Anyone can submit into the active battle
-        allow create: if true;
-        // Anyone can vote (increment only)
-        allow update: if request.resource.data.votes == resource.data.votes + 1
-                   && request.resource.data.keys().hasOnly(['votes']);
-        // Only ADMIN can delete items
-        allow delete: if isAdmin();
+        allow create, delete: if isAdmin();
+      }
+    }
+
+    match /queues/{queueName}/items/{itemId} {
+      allow create, read: if queueName == 'feedback' || queueName == 'beatBattle';
+      allow read, write: if (queueName == 'feedbackArchive' || queueName == 'battleArchive') && isAdmin();
+      allow delete: if isAdmin();
+      // REMOVED: The complex and failing 'update' rule is no longer needed.
+
+      // NEW: Rule for the new voters subcollection
+      match /voters/{userId} {
+        // Allow a user to create a vote for themselves (the document ID is their UID)
+        allow create: if isSignedIn() && request.auth.uid == userId;
+        // Allow anyone to see who has voted (to get counts)
+        allow read: if true;
+        // Nobody can change or delete a vote
+        allow update, delete: if false;
       }
     }
   }

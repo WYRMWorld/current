@@ -5,105 +5,50 @@
   <title>WYRM Admin Dashboard</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="style.css">
-
-  <!-- CSP allowing particles.js CDN -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
-          script-src  'self'
-                       https://www.gstatic.com
-                       https://cdn.jsdelivr.net;
-          connect-src 'self'
-                       https://firestore.googleapis.com
-                       https://identitytoolkit.googleapis.com
-                       https://www.googleapis.com
-                       https://securetoken.googleapis.com;
+          script-src  'self' https://www.gstatic.com https://cdn.jsdelivr.net;
+          connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.googleapis.com https://securetoken.googleapis.com;
           style-src   'self' 'unsafe-inline';
           img-src     'self' data: blob:;
-          media-src   'self' https://firebasestorage.googleapis.com;
+          media-src   'self' https://firebasestorage.googleapis.com https://storage.googleapis.com;
           frame-src   https://w.soundcloud.com;
         ">
-
-  <style>
-    /* Page container */
-    #page-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem;
-    }
-    /* Section styling */
-    .admin-section {
-      margin-bottom: 2rem;
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 8px;
-    }
-    /* Layout for queues and management */
-    .queue-container,
-    .management-container {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .queue-container .admin-section,
-    .management-container .admin-section {
-      flex: 1;
-      min-width: 250px;
-    }
-    /* Collapsible details */
-    details {
-      border: 1px solid var(--accent-green);
-      background: var(--card-bg);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-    }
-    details summary {
-      font-weight: bold;
-      color: var(--accent-green);
-      cursor: pointer;
-      outline: none;
-      margin-bottom: 0.5rem;
-    }
-    /* Danger zone coloring */
-    details.danger-zone summary {
-      color: var(--accent-pink);
-      border-color: var(--accent-pink);
-    }
-  </style>
 </head>
 <body>
   <nav>
-    <a href="index.html"       class="btn">Home</a>
-    <a href="submit.html"      class="btn">Submit</a>
-    <a href="listen.html"      class="btn">Listen</a>
-    <a href="blog.html"        class="btn">Blog</a>
-    <a href="beatbattle.html"  class="btn">Beat Battle</a>
-    <button id="sign-out"      class="btn btn-logout" style="display:none;">Log out</button>
+    <a href="index.html">Home</a>
+    <a href="submit.html">Submit</a>
+    <a href="listen.html">Listen</a>
+    <a href="blog.html">Blog</a>
+    <a href="beatbattle.html">Beat Battle</a>
+    <button id="sign-out" style="display:none;">Log out</button>
   </nav>
+  <div class="nav-underline"></div>
 
-  <div id="page-content">
-    <div id="loader" class="loader-container">
-      <div id="loader-particles"></div>
-      <div class="custom-loader">
-        <img src="logo.png" alt="Loading…">
-      </div>
-      <p>Loading Dashboard…</p>
+  <div id="loader" class="loader-container">
+    <div id="loader-particles"></div>
+    <div class="custom-loader">
+      <img src="logo.png" alt="Loading…">
     </div>
+    <p>Loading Dashboard…</p>
+  </div>
 
-    <main id="admin-ui" style="display:none;">
-      <h1>Admin Dashboard</h1>
-
-      <!-- Battle Creation & Management -->
-      <section class="admin-section" id="battle-creation">
-        <h2 id="current-battle-title">Loading…</h2>
-        <button id="create-battle" class="btn">Start New Battle</button>
-        <button id="end-battle"    class="btn">End &amp; Crown Winner</button>
+  <main id="admin-ui" class="content-wrapper" style="display:none;">
+    <h1>Admin Dashboard</h1>
+    
+    <section class="admin-section">
+        <h2>Battle Management</h2>
+        <h3 id="current-battle-title">No Active Battle</h3>
+        <button id="create-battle" class="btn">Create New Battle</button>
+        <button id="toggle-voting-btn" class="btn">Open Voting</button>
+        <button id="end-battle"    class="btn">End Battle &amp; Crown Winner</button>
+        <button id="cancel-battle" class="btn">Cancel Active Battle</button>
         <div id="battle-creation-error" class="error-message"></div>
-      </section>
+    </section>
 
-      <!-- Live Queues -->
-      <div class="queue-container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
         <section class="admin-section">
           <h2>Feedback Queue</h2>
           <button id="next-feedback" class="btn">Archive Next Feedback</button>
@@ -117,74 +62,63 @@
         </section>
         <section class="admin-section">
           <h2>Beat Battle Queue</h2>
-          <button id="reset-battle-queue" class="btn">Clear Battle Queue</button>
-          <div id="battle-error" class="error-message"></div>
           <table class="queue-table">
             <thead>
-              <tr><th>#</th><th>Name</th><th>File</th></tr>
+              <tr><th>#</th><th>Name</th><th>Player</th></tr>
             </thead>
             <tbody id="battle-list-body"></tbody>
           </table>
         </section>
-      </div>
+    </div>
 
-      <!-- New Blog Post -->
-      <section class="admin-section" id="blog-post-management">
-        <h2>New Blog Post</h2>
-        <form id="new-post-form">
-          <input type="text"
-                 id="new-post-title"
-                 placeholder="Post Title"
-                 required
-                 class="chatgpt-input">
-          <textarea id="new-post-content"
-                    placeholder="Post Content"
-                    required
-                    class="chatgpt-input"></textarea>
-          <input type="file"
-                 id="new-post-media"
-                 accept="image/*,video/*">
-          <button type="submit"
-                  id="submit-post"
-                  class="btn">Publish Post</button>
-          <button type="button"
-                  id="cancel-post"
-                  class="btn">Cancel</button>
-          <div id="post-status" class="error-message"></div>
-        </form>
-      </section>
-
-      <!-- Existing Blog Posts -->
-      <details id="existing-posts-dropdown" class="admin-section">
+    <section class="admin-section" id="blog-post-management">
+      <h2>New Blog Post</h2>
+      <form id="new-post-form">
+        <input type="text" id="new-post-title" placeholder="Post Title" required class="chatgpt-input">
+        <textarea id="new-post-content" placeholder="Post Content" required class="chatgpt-input"></textarea>
+        <input type="file" id="new-post-media" accept="image/*,video/*">
+        <button type="submit" id="submit-post" class="btn">Publish Post</button>
+        <button type="button" id="cancel-post" class="btn">Cancel</button>
+        <div id="post-status" class="error-message"></div>
+      </form>
+    </section>
+    
+    <details class="admin-section details-green">
         <summary>Existing Blog Posts</summary>
-        <div id="blog-posts-list"></div>
-      </details>
-
-      <!-- Archives -->
-      <details id="feedback-archive-dropdown" class="admin-section">
+        <div id="blog-posts-list" style="padding-top: 1rem;"></div>
+    </details>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <details class="admin-section details-green">
         <summary>Archived Feedback</summary>
-        <ul id="feedback-archive-list"></ul>
+        <ul id="feedback-archive-list" style="padding-top: 1rem;"></ul>
       </details>
-      <details id="battle-archive-dropdown" class="admin-section">
+      <details class="admin-section details-green">
         <summary>Archived Battles</summary>
-        <ul id="battle-archive-list"></ul>
+        <ul id="battle-archive-list" style="padding-top: 1rem;"></ul>
       </details>
+    </div>
 
-      <!-- Danger Zone -->
-      <details id="danger-zone-dropdown" class="admin-section danger-zone">
-        <summary>Danger Zone</summary>
-        <p>These actions are permanent and cannot be undone.</p>
-        <button id="reset-feedback-queue"   class="btn">Clear Entire Feedback Queue</button>
-        <button id="clear-feedback-archive" class="btn">Clear Feedback Archive</button>
-        <button id="clear-battle-archive"   class="btn">Clear Battle Archive</button>
-        <div id="danger-zone-error" class="error-message"></div>
-      </details>
-    </main>
-  </div>
+    <details class="admin-section details-pink danger-zone">
+      <summary>Danger Zone</summary>
+      <div style="padding-top: 1rem;">
+          <p>These actions are permanent and cannot be undone.</p>
+          <button id="reset-feedback-queue" class="btn">Clear Feedback Queue</button>
+          <button id="reset-battle-queue" class="btn">Clear Battle Queue</button>
+          <button id="clear-feedback-archive" class="btn">Clear Feedback Archive</button>
+          <button id="clear-battle-archive" class="btn">Clear Battle Archive</button>
+          <button id="reset-winners" class="btn">Reset All Winners</button>
+          <div id="danger-zone-error" class="error-message"></div>
+      </div>
+    </details>
+
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script src="js/loader-particles.js"></script>
   <script type="module" src="js/firebase-config.js"></script>
   <script type="module" src="js/admin.js"></script>
+  <script type="module" src="js/admin-blog.js"></script>
+  <script type="module" src="js/admin-beatbattle.js"></script>
 </body>
 </html>

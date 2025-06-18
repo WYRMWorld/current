@@ -1,492 +1,374 @@
 :root {
-  --bg-color:      #0a0a0a;
-  --text-color:    #eee;
-  --accent-green:  #00ff9e;
-  --accent-pink:   #ff1493;
-  --card-bg:       #111;
-  --card-hover:    #222;
+  --bg-color: #0a0a0a;
+  --text-color: #eee;
+  --accent-green: #00ff9e;
+  --accent-pink: #ff1493;
+  --card-bg: #111;
+  --card-hover: #222;
+  --feature-bg: rgba(10, 10, 10, 0.7);
+  --dark-green-bg: #0a1a14;
+  --dark-pink-bg: #2b0f1a;
 }
 
+/* Universal */
 body {
   margin: 0;
-  padding: 0;
+  padding: 0 0 120px 0; 
   background: var(--bg-color);
   color: var(--text-color);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
   overflow-x: hidden;
 }
+a { color: var(--accent-pink); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-/* --------------------------------------------------
-   Particles & Hero layering
-   -------------------------------------------------- */
-#particles-js {
-  position: fixed;
-  inset: 0;
+/* ==================================================
+   NAVIGATION & LAYOUT
+   ================================================== */
+nav { background: var(--card-bg); padding: 1rem 0 0.6rem 0; text-align: center; width: 100%; position: relative; z-index: 10; }
+.nav-underline { width: 100%; height: 4px; background: var(--accent-green); margin-bottom: 2.5rem; box-shadow: 0 2px 16px #00ff9e40; position: relative; z-index: 10; }
+nav a, nav button { display: inline-block; margin: 0 1.5rem; font-weight: bold; font-size: 1.1em; color: var(--accent-pink); text-decoration: none; background: none; border: none; transition: color 0.16s; cursor: pointer; font-family: 'Inter', Arial, Helvetica, sans-serif; }
+nav a:hover, nav a:focus, nav button:hover, nav button:focus { color: var(--accent-green); text-decoration: underline; }
+.content-wrapper { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; position: relative; z-index: 5; }
+.btn { display: inline-block; padding: 0.7rem 1.5rem; font-size: 1em; font-weight: 700; border-radius: 6px; border: 1px solid var(--accent-pink); background: transparent; color: var(--accent-green); text-decoration: none; text-align: center; transition: all 0.2s; cursor: pointer; margin: 0.25rem; }
+.btn:hover { background: var(--accent-pink); color: var(--bg-color); border-color: var(--accent-pink); }
+.page-title { text-align: center; color: var(--accent-green); font-size: 2.5rem; margin-bottom: 2rem; }
+
+
+/* ==================================================
+   BEAT BATTLE PAGE STYLES
+   ================================================== */
+.battle-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2.5rem;
+    align-items: flex-start;
+}
+.leaderboard-section {
+    background: var(--card-bg);
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    border-top: 3px solid var(--accent-green);
+    position: relative;
+    overflow: hidden; 
+    z-index: 2;
+}
+.leaderboard-section h2 {
+    color: var(--accent-green);
+    /* UPDATED: Made border thicker for visibility */
+    border-bottom: 2px solid var(--accent-pink); 
+    padding-bottom: 0.5rem;
+    margin: 1rem 0;
+}
+#battle-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+}
+.track {
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 150px;
+}
+.track-info {
+    width: 100%;
+}
+.track-info h3 {
+    margin: 0 0 1rem 0;
+    color: var(--accent-green);
+}
+@keyframes vote-success-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.05); box-shadow: 0 0 30px var(--accent-green), inset 0 0 20px #00ff9e70; }
+  60% { transform: scale(0.98); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+.track.voted-success-anim {
+    animation: vote-success-pop 1.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+.vote-section { 
+    margin-top: 1rem;
+    align-self: flex-end;
+}
+.vote-button {
+    background: var(--accent-green);
+    color: var(--bg-color);
+    border: none;
+    border-radius: 6px;
+    padding: 0.8em 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s;
+}
+.vote-button:disabled { background: #555; color: #999; cursor: not-allowed; }
+.voting-closed-banner, .voting-active-banner {
+    text-align: center;
+    font-weight: bold;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    border-style: solid;
+    border-width: 1px;
+}
+.voting-closed-banner {
+    background-color: var(--dark-pink-bg);
+    color: var(--accent-pink);
+    border-color: var(--accent-pink);
+}
+.voting-active-banner {
+    background-color: var(--dark-green-bg);
+    color: var(--accent-green);
+    border-color: var(--accent-green);
+}
+.player-hidden-message {
+    background-color: #222;
+    color: #888;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 1rem;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* ==================================================
+   BOTTOM VOTE VISUALIZER BAR
+   ================================================== */
+#bottom-vote-visualizer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background: rgba(10, 10, 10, 0.9);
+    border-top: 2px solid var(--accent-green);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0.5%;
+    padding: 10px 1%;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+.visualizer-item {
+    flex: 1;
+    max-width: 100px;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse; 
+}
+.visualizer-bar-wrapper {
+    flex-grow: 1;
+    display: flex;
+    align-items: flex-end;
+}
+.visualizer-bar {
+    width: 100%;
+    background: linear-gradient(to top, var(--accent-green), var(--accent-pink));
+    border-radius: 5px 5px 0 0;
+    transition: height 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 0 10px var(--accent-green);
+}
+.visualizer-label {
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 25px;
+}
+
+/* ==================================================
+   "ELECTRICAL ENERGY" EFFECT
+   ================================================== */
+@keyframes energy-flicker {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.8; }
+}
+.leaderboard-section.voting-is-active::before,
+.leaderboard-section.voting-is-active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
+  background: radial-gradient(circle at center, transparent 30%, var(--accent-green) 120%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.5s;
 }
-.hero-area,
-nav,
-.flicker-title,
-.hero,
-.features {
-  position: relative;
-  z-index: 1;
+.leaderboard-section.voting-is-active::before {
+  animation: energy-flicker 4s linear infinite;
 }
-
-/* --------------------------------------------------
-   Navigation buttons
-   -------------------------------------------------- */
-nav {
-  background: var(--card-bg);
-  padding: 1rem;
-  text-align: center;
+.leaderboard-section.voting-is-active::after {
+  animation: energy-flicker 3s linear infinite reverse;
+  background: radial-gradient(circle at center, transparent 30%, var(--accent-pink) 120%);
 }
-nav .btn {
-  display: inline-block;
-  margin: 0 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--accent-green);
-  color: #111;
-  border-radius: 4px;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-nav .btn:hover {
-  opacity: 0.8;
+.leaderboard-section.voting-is-active > * {
+    position: relative;
+    z-index: 2;
 }
 
-/* --------------------------------------------------
-   Hero CTAs
-   -------------------------------------------------- */
-.hero {
-  text-align: center;
-  padding: 2rem;
+/* ==================================================
+   LOADER & BACKGROUND STYLES
+   ================================================== */
+#neon-orbs-bg, #loader-particles {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; 
+  pointer-events: none;
 }
-.hero .btn {
-  border: 2px solid var(--accent-green);
-  background: transparent;
-  color: var(--accent-green);
-  padding: 0.75rem 1.5rem;
-  margin: 0 0.5rem;
-  transition: all 0.3s ease;
-}
-.hero .btn:hover {
-  background: var(--accent-green);
-  color: var(--bg-color);
-  box-shadow: 0 0 10px var(--accent-pink);
-}
-
-/* --------------------------------------------------
-   Flicker title
-   -------------------------------------------------- */
-.flicker-title {
-  font-size: 4rem;
-  text-transform: uppercase;
-  color: var(--bg-color);
-  -webkit-text-stroke: 2px var(--accent-green);
-  text-align: center;
-  margin: 2rem 0;
-  animation: flicker 3s infinite;
-}
-
-/* --------------------------------------------------
-   LOADER STYLES (Includes fix for pulsating logo)
-   -------------------------------------------------- */
 .loader-container {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    z-index: 998; display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    background-color: var(--bg-color, #0a0a0a); overflow: hidden;
-    /* New styles for a smooth fade-out effect */
-    opacity: 1;
-    transition: opacity 0.5s ease-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
 }
-
-.loader-container.hidden {
-    opacity: 0;
-    pointer-events: none; /* Prevents clicking on the loader as it fades */
-}
-
 .custom-loader img {
     width: 120px;
     height: 120px;
-    animation: pulse 2s ease-in-out infinite; /* This is the key animation */
-    z-index: 2;
-    position: relative;
+    animation: pulse 2s ease-in-out infinite;
 }
 .loader-container p {
     margin-top: 1.5rem;
-    color: var(--text-color, #eee);
-    animation: flicker 3s infinite alternate;
+    color: var(--text-color);
+    animation: flicker 2.8s infinite alternate;
     font-size: 1.2rem;
-    z-index: 2;
 }
-#loader-particles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-/* Keyframe Animations */
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-@keyframes flicker {
-    0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; }
-    20%,24%,55%                   { opacity: 0.2; }
-}
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
 
-/* --------------------------------------------------
-   Features grid
-   -------------------------------------------------- */
-.features {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  padding: 2rem;
-  gap: 1rem;
-}
-.feature {
-  background: var(--card-bg);
-  padding: 1rem;
-  border-radius: 8px;
-  flex: 1 1 30%;
-  box-sizing: border-box;
-  text-align: center;
-}
-.feature p {
-  color: #ccc;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
+/* ==================================================
+   LISTEN PAGE CAROUSEL
+   ================================================== */
+.listen-page .content-wrapper { max-width: 100%; padding: 0; }
+.carousel { background: transparent; width: 100%; }
+.carousel-cell { position: relative; width: 24%; height: 380px; margin-right: 20px; background: #000; border-radius: 10px; overflow: hidden; }
+.carousel-cell iframe { width: 100%; height: 100%; border: 0; }
+.carousel-cell-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+.carousel.is-dragging .carousel-cell-overlay { pointer-events: auto; }
+.flickity-prev-next-button { background: var(--accent-pink); }
+.flickity-prev-next-button:hover { background: var(--accent-green); }
+.flickity-prev-next-button .flickity-button-icon { fill: var(--bg-color); }
+@media screen and (max-width: 768px) { .carousel-cell { width: 80%; height: 300px; } }
 
-/* --------------------------------------------------
-   Listen page: Flickity carousel
-   -------------------------------------------------- */
-.carousel {
-  background: var(--bg-color);
-  padding: 2rem 0;
-  overflow: hidden;
-}
-.carousel-cell {
-  flex: 0 0 300px;
-  width: 300px;
-  height: 300px;
-  margin-right: 1rem;
-  background: var(--card-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-}
-.carousel-cell iframe {
-  width: 100% !important;
-  height: 100% !important;
-  border: none;
-  pointer-events: none; /* so drag works */  
-}
-.carousel .flickity-viewport {
-  overflow: hidden !important;
-  scrollbar-width: none;
-}
-.carousel .flickity-viewport::-webkit-scrollbar {
-  display: none;
-}
-.track-scroll {
-  display: flex;
-  overflow: hidden;
-  cursor: grab;
-  padding: 1rem;
-}
+/* ==================================================
+   ADMIN & SUBMIT PAGE STYLES
+   ================================================== */
+.admin-section { background: var(--card-bg); border-radius: 10px; padding: 2rem; margin-bottom: 2rem; }
+.admin-section h2 { color: var(--accent-green); border-bottom: 2px solid var(--accent-pink); padding-bottom: 0.25rem; margin-top: 0; margin-bottom: 1rem; font-size: 1.25rem; font-weight: 700; }
+details.admin-section { border: 2px solid #333; transition: background-color 0.4s ease-in-out, border-color 0.4s ease-in-out; }
+details.admin-section > summary { cursor: pointer; font-size: 1.25rem; font-weight: 700; list-style: none; padding: 0; position: relative; }
+details.admin-section > summary::-webkit-details-marker { display: none; }
+details.admin-section > summary::before { content: '►'; font-size: 0.8em; margin-right: 0.75rem; display: inline-block; transition: transform 0.2s; }
+details.admin-section[open] > summary::before { transform: rotate(90deg); }
+details.admin-section[open] > summary { margin-bottom: 1rem; }
+details.details-green > summary { color: var(--accent-green); }
+details.details-green[open] { background-color: var(--dark-green-bg); border-color: var(--accent-green); }
+details.details-pink > summary { color: var(--accent-pink); }
+details.details-pink[open] { background-color: var(--dark-pink-bg); border-color: var(--accent-pink); }
+.danger-zone button { background-color: #a02a2a; border-color: #a02a2a; color: white; }
+.danger-zone button:hover { background-color: #c0392b; border-color: #c0392b; }
+.submission-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; align-items: start; gap: 2.5rem; width: 100%; }
+.queue-display, .form-container { background: var(--card-bg); padding: 1.5rem; border-radius: 10px; border: 1px solid #333; height: 100%; }
+.queue-display h3 { color: var(--accent-green); margin-top: 0; border-bottom: 1.5px solid var(--accent-pink); padding-bottom: 0.5rem; font-size: 1.1rem; }
+.form-container { border-color: var(--accent-green); }
+#submit-form label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: var(--accent-green); }
+#submit-form input[type="file"] { margin-bottom: 1rem; }
+#submit-form fieldset { border: 1px solid var(--accent-pink); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; }
+#submit-form legend { padding: 0 0.5rem; color: var(--accent-pink); font-weight: bold; }
+#battle-status-message { text-align: center; font-weight: bold; margin-top: 1.5rem; padding: 0.75rem; border-radius: 6px; }
 
-/* --------------------------------------------------
-   Submission & Admin queues
-   -------------------------------------------------- */
-.queue-section {
-  background: var(--card-bg);
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1.5rem 0;
-}
-.queue-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.queue-table th,
-.queue-table td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #333;
-}
-.queue-table tr:nth-child(even) {
-  background: var(--card-bg);
-}
+/* ==================================================
+   HOME PAGE & GENERIC STYLES
+   ================================================== */
+.wyrm-title { text-align: center; font-size: 4rem; color: var(--accent-green); letter-spacing: 0.18em; font-weight: 900; margin: 2.3rem 0 0.9rem 0; animation: flicker 2.8s infinite alternate; text-shadow: 0 0 12px #00ff9e80, 0 0 18px #ff149360, 0 0 4px #fff, 0 0 2px #00ff9e; position: relative; }
+@keyframes flicker { 0%,19%,21%,23%,25%,54%,56%,100% { opacity: 1; } 20%,24%,55% { opacity: 0.55; } }
+.main-btn-row { display: flex; justify-content: center; gap: 1.2rem; margin: 2rem 0 2.8rem 0; }
+.main-action-btn { display: inline-block; padding: 0.7rem 2.2rem; font-size: 1.16em; font-weight: 700; border-radius: 8px; border: 2px solid var(--accent-pink); background: transparent; color: var(--accent-green); text-decoration: none; text-align: center; transition: all 0.15s; }
+.main-action-btn:hover, .main-action-btn:focus { background: var(--card-bg); color: var(--accent-pink); border-color: var(--accent-green); box-shadow: 0 0 16px #00ff9e80; transform: translateY(-2px) scale(1.06); }
+.feature-row { display: flex; justify-content: center; gap: 2.2rem; flex-wrap: wrap; }
+.feature-card { background: var(--card-bg); border-radius: 14px; border: 1.5px solid var(--accent-green); box-shadow: 0 2px 24px #111b; min-width: 260px; max-width: 330px; flex: 1 1 26%; padding: 2rem 1.3rem 2.1rem 1.3rem; margin: 1rem 0.5rem; text-align: center; }
+.feature-card:hover { border-color: var(--accent-pink); box-shadow: 0 4px 34px #ff149370, 0 0 24px #00ff9e44; }
+.feature-header { color: var(--accent-green); font-size: 1.25em; font-weight: 700; margin-bottom: 0.3em; letter-spacing: 0.01em; }
+.feature-divider { border-bottom: 2px solid var(--accent-pink); margin: 1em auto 1.1em auto; width: 50%; }
+.feature-card p { color: #ccc; font-size: 1.04rem; margin: 0; text-shadow: 0 1px 8px #00ff9e33; }
+.queue-table { width: 100%; border-collapse: collapse; }
+.queue-table th, .queue-table td { padding: 0.75rem; border-bottom: 1px solid #333; text-align: left; }
+.queue-table tr:last-child td { border-bottom: none; }
+.queue-table th { color: var(--accent-green); }
+.chatgpt-input { width: 100%; box-sizing: border-box; background: var(--bg-color); color: var(--text-color); border: 1px solid #444; border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 1rem; font-family: 'Inter', sans-serif; resize: vertical; }
+.error-message { color: #ff6b6b; margin-top: 0.5rem; }
+footer { text-align: center; color: var(--accent-pink); margin: 3rem 0 1.5rem 0; opacity: 0.7; }
 
-/* --------------------------------------------------
-   Admin Blog inputs
-   -------------------------------------------------- */
-.chatgpt-input {
-  width: 100%;
-  background: var(--card-bg);
-  color: var(--text-color);
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  font-size: 1rem;
-  font-family: 'Inter', sans-serif;
-  resize: vertical;
+/* ==================================================
+   BLOG PAGE STYLES
+   ================================================== */
+#posts-container {
+    max-width: 800px;
+    margin: 0 auto;
 }
-
-/* --------------------------------------------------
-   Blog posts
-   -------------------------------------------------- */
 .post {
-  background: var(--card-bg);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+    background-color: var(--card-bg);
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-.post-media a {
-  display: inline-block;
-  margin-right: 1rem;
-  color: var(--accent-green);
+.post h2 {
+    color: var(--accent-green);
+    margin-top: 0;
+    margin-bottom: 0.25rem;
 }
-
-/* --------------------------------------------------
-   Beat Battle tracks
-   -------------------------------------------------- */
-.track {
-  background: var(--card-bg);
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+.post time {
+    color: #888;
+    font-size: 0.9rem;
+    display: block;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--accent-pink);
+    padding-bottom: 1rem;
 }
-.spinner {
-  margin-left: 0.5rem;
+.post .post-media {
+    margin: 1.5rem 0;
 }
-
-/* --------------------------------------------------
-   Admin sections & errors
-   -------------------------------------------------- */
-#blog-manager,
-#battle-manager {
-  background: var(--card-hover);
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin: 2rem 0;
+.post .post-media img,
+.post .post-media video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
 }
-.error-message {
-  color: #ff6b6b;
-  margin-top: 0.5rem;
+.post .post-content {
+    line-height: 1.7;
+    font-size: 1.1rem;
+}
+.post .post-content p {
+    margin-bottom: 1rem;
 }
 
-/* --------------------------------------------------
-   Archive dropdown
-   -------------------------------------------------- */
-#archive-dropdown {
-  background: var(--card-bg);
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 0.75rem;
-  margin: 2rem 0;
-}
-#archive-dropdown summary {
-  cursor: pointer;
-  font-weight: bold;
-  color: var(--accent-green);
-  outline: none;
-}
-#archive-dropdown[open] {
-  padding-bottom: 1rem;
-}
-#archive-dropdown ul {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-/* --------------------------------------------------
-   Login form
-   -------------------------------------------------- */
-.login-container {
-  max-width: 360px;
-  margin: 5rem auto;
-  background: var(--card-bg);
-  padding: 2rem;
-  border-radius: 8px;
-  color: var(--text-color);
-  text-align: center;
-}
-.login-container input,
-.login-container button {
-  width: 100%;
-  margin: 0.5rem 0;
-  padding: 0.75rem;
-  border: none;
-  border-radius: 4px;
-}
-.login-container button {
-  background: var(--accent-green);
-  color: #111;
-  font-weight: bold;
-}
-
-/* --------------------------------------------------
-   Max content width
-   -------------------------------------------------- */
-.post, .track {
-  max-width: 800px;
-  margin: 0 auto 1.5rem;
-}
-
-/* —————————————————————————————————————
-   Admin “New Blog Post” form: big chat-like box
-   ————————————————————————————————————— */
-#new-blog-post textarea {
-  width: 100%;
-  min-height: 8em;
-  padding: 0.75em;
-  border-radius: 0.5em;
-  border: 1px solid var(--card-hover);
-  font-family: inherit;
-  font-size: 1rem;
-  resize: vertical;
-  box-sizing: border-box;
-  margin-bottom: 0.75em;
-}
-
-#new-blog-post input[type="file"] {
-  display: block;
-  margin-bottom: 1rem;
-}
-#new-blog-post button {
-  margin-right: 0.5rem;
-}
-
-/* make every admin-section look like a card */
-.admin-section {
-  background: var(--card-bg);
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-/* style the Danger Zone dropdown */
-#danger-zone-dropdown {
-  border-color: var(--accent-pink);
-  background-color: #1a1111;
-}
-#danger-zone-dropdown summary {
-  cursor: pointer;
-  font-weight: bold;
-  color: var(--accent-pink);
-  margin-bottom: 0.75rem;
-  outline: none;
-}
-#danger-zone-dropdown[open] {
-  padding-bottom: 1rem;
-}
-/* space out the inner contents */
-#danger-zone-dropdown > p,
-#danger-zone-dropdown > button,
-#danger-zone-dropdown > .error-message {
-  margin-top: 0.75rem;
-  display: block;
-}
-
-/* flex side-by-side for live queues */
-.queue-container {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-}
-
-/* universal admin-section card */
-.admin-section {
-  background: var(--card-bg);
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 1.5rem;
-  flex: 1;                 /* allow side-by-side to share space */
-  min-width: 300px;
-}
-
-/* headings: green text with pink underline */
-.admin-section h2 {
-  font-size: 1.25rem;
-  color: var(--accent-green);
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 2px solid var(--accent-pink);
-}
-
-/* tables inside admin-sections */
-.admin-section table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-.admin-section th,
-.admin-section td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #333;
-  text-align: left;
-}
-
-/* Danger Zone dropdown tweaks */
-#danger-zone-dropdown summary {
-  font-size: 1.25rem;
-  color: var(--accent-pink);
-  cursor: pointer;
-  margin-bottom: 0.75rem;
-  list-style: none;
-}
-#danger-zone-dropdown p,
-#danger-zone-dropdown button,
-#danger-zone-dropdown .error-message {
-  margin-top: 0.5rem;
-}
-
-/* --------------------------------------------------
-   Vote bars under each track
-   -------------------------------------------------- */
-.track {
-  position: relative;
-  margin-bottom: 1.5rem;
-  border: 1px solid #2a2a2a;
-  border-radius: 6px;
-  overflow: hidden;
-}
-.track-header {
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background: var(--card-bg);
-}
-.vote-section { display: flex; align-items: center; gap: 0.5rem; }
-.vote-bar {
-  background: #2a2a2a;
-  height: 8px;
-  width: 100%;
-}
-.vote-fill {
-  background: var(--accent-green);
-  height: 100%;
-  width: 0;
-  transition: width 0.6s ease;
-}
-
-/* disable cursor on already-voted buttons */
-.vote-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
+/* Responsive Styles */
+@media (max-width: 1000px) { .submission-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .admin-section > div[style*="grid"], .battle-main-grid, .feature-row { grid-template-columns: 1fr !important; flex-direction: column; align-items: center; } }

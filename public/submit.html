@@ -5,80 +5,23 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Submit</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="submit-loader.css">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://cdn.jsdelivr.net; connect-src 'self' https://firestore.googleapis.com https://identitytoolkit.googleapis.com https://www.googleapis.com https://securetoken.googleapis.com https://firebasestorage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://firebasestorage.googleapis.com; frame-src https://w.soundcloud.com;">
-  <style>
-    .loader-container {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 998; display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
-      background-color: var(--bg-color, #0a0a0a); overflow: hidden;
-    }
-    .custom-loader img {
-      width: 120px; height: 120px; animation: pulse 2s ease-in-out infinite;
-      z-index: 2; position: relative;
-    }
-    .loader-container p {
-      margin-top: 1.5rem; color: var(--text-color, #eee);
-      animation: flicker 3s infinite alternate; font-size: 1.2rem; z-index: 2;
-    }
-    #loader-particles {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%; z-index: 1;
-    }
-    /* New styles for the live queue display */
-    .live-queues-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-top: 3rem;
-      justify-content: center;
-    }
-    .queue-display {
-      flex: 1;
-      min-width: 300px;
-      max-width: 500px;
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 8px;
-      border: 1px solid #333;
-    }
-    .queue-display h3 {
-      color: var(--accent-green);
-      margin-top: 0;
-      border-bottom: 1px solid var(--accent-pink);
-      padding-bottom: 0.5rem;
-    }
-  </style>
 </head>
 <body>
   <nav>
-    <a href="index.html" class="btn">Home</a>
-    <a href="listen.html" class="btn">Listen</a>
-    <a href="blog.html" class="btn">Blog</a>
-    <a href="beatbattle.html" class="btn">Beat Battle</a>
-    <a href="admin.html" class="btn">Admin</a>
+    <a href="index.html">Home</a>
+    <a href="listen.html">Listen</a>
+    <a href="blog.html">Blog</a>
+    <a href="beatbattle.html">Beat Battle</a>
+    <a href="admin.html">Admin</a>
   </nav>
+  <div class="nav-underline"></div>
 
-  <div id="page-content">
-    <h2>Submit Your Track</h2>
-    <main class="form-container">
-      <form id="submit-form">
-        <label>Name:</label>
-        <input type="text" name="name" id="submit-name" required>
-        <label>Track File:</label>
-        <input type="file" name="track" id="submit-track" accept=".wav,.mp3" required>
-        <fieldset>
-          <legend>Queue Type</legend>
-          <label><input type="radio" name="type" value="feedback" checked> Feedback</label>
-          <label><input type="radio" name="type" value="beatBattle"> Beat Battle</label>
-        </fieldset>
-        <button class="btn-primary" type="submit">Join Queue</button>
-        <div id="submit-status" style="margin-top: 1rem;"></div>
-      </form>
-    </main>
-
-    <!-- New Live Queue Display Sections -->
-    <div class="live-queues-container">
+  <main class="content-wrapper">
+    <h2 style="text-align:center;margin-bottom:2rem;color:var(--accent-green);font-size:2rem;font-weight:700;letter-spacing:1.5px;">Submit Your Track</h2>
+    
+    <div class="submission-grid">
       <div id="feedback-queue-display" class="queue-display">
         <h3>Live Feedback Queue</h3>
         <table class="queue-table">
@@ -89,11 +32,27 @@
               <th>File</th>
             </tr>
           </thead>
-          <tbody id="feedback-queue-body">
-            <tr><td colspan="3">Loading...</td></tr>
-          </tbody>
+          <tbody id="feedback-queue-body"></tbody>
         </table>
       </div>
+      
+      <div class="form-container">
+        <form id="submit-form" autocomplete="off">
+          <label for="submit-name">Name:</label>
+          <input type="text" name="name" id="submit-name" maxlength="48" required placeholder="Your display name" class="chatgpt-input">
+          <label for="submit-track">Track File:</label>
+          <input type="file" name="track" id="submit-track" accept=".wav,.mp3" required>
+          <fieldset>
+            <legend>Queue Type</legend>
+            <label><input type="radio" name="type" value="feedback" checked> Feedback</label>
+            <label><input type="radio" name="type" value="beatBattle"> Beat Battle</label>
+          </fieldset>
+          <button type="submit" class="btn" id="submit-btn">Join Queue</button>
+          <div id="submit-status" class="error-message"></div>
+          <div id="battle-status-message"></div>
+        </form>
+      </div>
+
       <div id="beatbattle-queue-display" class="queue-display">
         <h3>Live Beat Battle Queue</h3>
         <table class="queue-table">
@@ -104,25 +63,59 @@
               <th>File</th>
             </tr>
           </thead>
-          <tbody id="beatbattle-queue-body">
-            <tr><td colspan="3">Loading...</td></tr>
-          </tbody>
+          <tbody id="beatbattle-queue-body"></tbody>
         </table>
       </div>
     </div>
-  </div>
+  </main>
   
-  <div id="initial-loader" class="loader-container" style="display: none;">
-    <div id="loader-particles"></div>
-    <div class="custom-loader">
-      <img src="logo.png" alt="Loading..." />
+  <!-- RESTORED: Full HTML structure for the Lightspeed Loader -->
+  <div id="lightspeed-loader" class="lightspeed-loader" style="display:none;">
+    <div class="loader-center">
+      <div class="loader-logo-wrapper">
+        <img src="logo.png" class="loader-logo" alt="">
+        <svg class="loader-arc" viewBox="0 0 168 168">
+          <defs>
+            <linearGradient id="arc-gradient" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%"   stop-color="#00ff9e" stop-opacity="1"/>
+              <stop offset="100%" stop-color="#ff1493" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="arc-tail-gradient" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%"   stop-color="#ff1493" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#ff1493" stop-opacity="0"/>
+            </linearGradient>
+            <linearGradient id="hot-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#fff" stop-opacity="1"/>
+              <stop offset="60%"  stop-color="#fff" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#ffe066" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="spark-blur" x="-60%" y="-60%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            <filter id="tail-blur" x="-60%" y="-60%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="7" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <path id="spinner-tail" stroke="url(#arc-tail-gradient)" stroke-width="3.2" stroke-linecap="round" fill="none" filter="url(#tail-blur)"/>
+          <path id="spinner-arc" stroke="url(#arc-gradient)" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <circle id="spinner-hot" r="7" cx="0" cy="0" fill="url(#hot-gradient)" filter="url(#spark-blur)" opacity="0.9"/>
+        </svg>
+      </div>
+      <div class="loader-message">Sending your track!</div>
     </div>
-    <p>Submitting...</p>
+    <canvas id="lightspeed-canvas"></canvas>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <script src="js/loader-particles.js"></script>
   <script type="module" src="js/firebase-config.js"></script>
+  <script type="module" src="js/lightspeed-loader.js"></script>
   <script type="module" src="js/submit.js"></script>
 </body>
 </html>

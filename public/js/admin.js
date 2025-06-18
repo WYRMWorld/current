@@ -1,37 +1,36 @@
-// public/js/admin.js
 import { auth } from './firebase-config.js';
-// CORRECTED: signOut is now imported from the auth library directly.
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js';
-import { initializeAdminView } from './admin-beatbattle.js';
-import { initializeBlogView } from './admin-blog.js'; // Import the new blog initialization function
+import { initializeAdminView as initializeBeatBattleView } from './admin-beatbattle.js';
+import { initializeBlogView } from './admin-blog.js';
 
-// --- DOM ELEMENTS ---
-const adminUI = document.getElementById('admin-ui');
-const signOutBtn = document.getElementById('sign-out');
-const loader = document.getElementById('loader');
+// This is the single entry point for the entire admin page.
+// It waits for Firebase to report the user's authentication status.
+onAuthStateChanged(auth, (user) => {
+  const loader = document.getElementById('loader');
+  const adminUI = document.getElementById('admin-ui');
+  const signOutBtn = document.getElementById('sign-out');
 
-// --- AUTHENTICATION ---
-// This script now controls the entire page setup sequence.
-onAuthStateChanged(auth, user => {
   if (user) {
-    // 1. User is authenticated, so hide the loader and show the admin UI.
-    if(loader) loader.style.display = 'none';
-    if(adminUI) adminUI.style.display = 'block';
-    if(signOutBtn) signOutBtn.style.display = 'inline-block';
+    // 1. User is authenticated. First, hide the loader and show the admin panel.
+    if (loader) loader.style.display = 'none';
+    if (adminUI) adminUI.style.display = 'block';
+    
+    // 2. Set up the sign-out button.
+    if (signOutBtn) {
+      signOutBtn.style.display = 'inline-block';
+      signOutBtn.addEventListener('click', () => {
+        signOut(auth).catch(error => console.error('Sign out error:', error));
+      });
+    }
 
-    // 2. NOW that the UI is visible, load all the data and set up event listeners.
-    initializeAdminView();
-    initializeBlogView(); // Call the blog setup function.
+    // 3. NOW that the page is visible, initialize all the admin functionality.
+    // This prevents the "cannot read properties of null" error because we know
+    // all the buttons and sections exist at this point.
+    initializeBeatBattleView();
+    initializeBlogView();
 
   } else {
-    // User is not authenticated, redirect to the login page.
+    // User is not authenticated, redirect them to the login page.
     window.location.href = 'login.html';
   }
 });
-
-// Add the sign-out functionality.
-if(signOutBtn) {
-    signOutBtn.addEventListener('click', () => {
-        signOut(auth).catch(error => console.error('Sign out error:', error));
-    });
-}

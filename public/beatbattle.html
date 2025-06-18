@@ -5,11 +5,7 @@
   <title>WYRM Beat Battle</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" href="style.css">
-
-  <!-- Favicon so you don’t get a 404 -->
   <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-  <!-- CSP allowing particles.js -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
@@ -20,114 +16,48 @@
           media-src   'self' https://firebasestorage.googleapis.com;
           frame-src   https://w.soundcloud.com;
         ">
-
-  <style>
-    /* Full-screen loader */
-    .loader-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: var(--bg-color, #0a0a0a);
-      overflow: hidden;
-      z-index: 998;
-    }
-    #loader-particles {
-      position: absolute;
-      width: 100%; height: 100%;
-      top: 0; left: 0;
-      z-index: 1;
-    }
-    .custom-loader img {
-      width: 120px; height: 120px;
-      animation: pulse 2s infinite ease-in-out;
-      z-index: 2;
-    }
-    .loader-container p {
-      margin-top: 1rem;
-      color: var(--text-color, #eee);
-      font-size: 1.2rem;
-      animation: flicker 3s infinite alternate;
-      z-index: 2;
-    }
-    @keyframes pulse   {0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
-    @keyframes flicker {0%,19%,21%,23%,25%,54%,56%,100%{opacity:1;}20%,24%,55%{opacity:0.3;}}
-
-    /* Track + vote styling */
-    .track { margin:1rem 0; background:var(--card-bg); border-radius:6px; overflow:hidden; }
-    .track-header {
-      display:flex; justify-content:space-between; align-items:center;
-      padding:.75rem 1rem; background:var(--card-bg);
-    }
-    .vote-section { display:flex; align-items:center; gap:.5rem; }
-    .vote-bar    { background:#333; width:100%; height:8px; }
-    .vote-fill   { background:var(--accent-green); width:0; height:100%; transition:width .6s ease; }
-
-    /* Leaderboard styling */
-    .leaderboard-section {
-      max-width:800px; margin:2rem auto;
-      background:var(--card-bg); padding:1.5rem; border-radius:8px;
-    }
-    .leaderboard-section h2 {
-      color:var(--accent-green);
-      border-bottom:2px solid var(--accent-pink);
-      padding-bottom:.5rem; margin-bottom:1rem;
-    }
-    .leaderboard-section ul { list-style:none; padding:0; margin:0; }
-    .leaderboard-section li { padding:.5rem 0; border-bottom:1px solid #333; }
-  </style>
 </head>
 <body>
   <nav>
-    <a href="index.html"     class="btn">Home</a>
-    <a href="submit.html"    class="btn">Submit</a>
-    <a href="listen.html"    class="btn">Listen</a>
-    <a href="blog.html"      class="btn">Blog</a>
-    <a href="admin.html"     class="btn">Admin</a>
+    <a href="index.html">Home</a>
+    <a href="submit.html">Submit</a>
+    <a href="listen.html">Listen</a>
+    <a href="blog.html">Blog</a>
+    <a href="admin.html">Admin</a>
   </nav>
+  <div class="nav-underline"></div>
 
-  <!-- Loader overlay -->
   <div id="initial-loader" class="loader-container">
     <div id="loader-particles"></div>
-    <div class="custom-loader">
-      <img src="logo.png" alt="Loading…">
-    </div>
+    <div class="custom-loader"><img src="logo.png" alt="Loading…"></div>
     <p>Loading battle…</p>
   </div>
 
-  <header>
-    <h1 id="battle-title">Current Beat Battle</h1>
-  </header>
-
-  <main id="battle-container">
-    <!-- JS will inject tracks & vote bars here -->
+  <main class="content-wrapper">
+    <div class="battle-main-grid">
+      <section id="battle-main-content" class="battle-vote-list leaderboard-section">
+        <h1 id="battle-title">Current Beat Battle</h1>
+        <div id="voting-status-message"></div>
+        <div id="battle-container"></div>
+      </section>
+      
+      <aside id="leaderboards" class="leaderboard-section">
+        <h2>Previous Battle’s Top 3</h2>
+        <ul id="previous-winners-list"><li>Loading…</li></ul>
+        <h2>All-Time Winners</h2>
+        <ul id="all-time-winners-list"><li>Loading…</li></ul>
+        <h2>Most Wins Leader</h2>
+        <ul class="most-wins-leader-list">
+            <li id="most-wins-leader">Loading…</li>
+        </ul>
+      </aside>
+    </div>
   </main>
-
-  <section id="leaderboards" class="leaderboard-section">
-    <div>
-      <h2>Previous Battle’s Top 3</h2>
-      <ul id="previous-winners-list">
-        <li>Loading…</li>
-      </ul>
-    </div>
-    <div style="margin-top:2rem;">
-      <h2>All-Time Winners</h2>
-      <ul id="all-time-winners-list">
-        <li>Loading…</li>
-      </ul>
-    </div>
-    <div style="margin-top:2rem;">
-      <h2>Most Wins Leader</h2>
-      <p id="most-wins-leader">Loading…</p>
-    </div>
-  </section>
+  
+  <div id="bottom-vote-visualizer"></div>
 
   <footer>© WYRM Collective</footer>
 
-  <!-- scripts in original order -->
   <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <script src="js/loader-particles.js"></script>
   <script type="module" src="js/firebase-config.js"></script>
