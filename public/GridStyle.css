@@ -1,164 +1,189 @@
+/*
+========================================
+BASE & FONT STYLES
+========================================
+*/
+
 :root {
-  --bg-color: #0a0a0a;
-  --text-color: #eee;
-  --accent-green: #00ff9e;
-  --accent-pink: #ff1493;
-  --card-bg: #111;
-  --border-color: #333;
-  --font-main: 'Inter', Arial, Helvetica, sans-serif;
-  --header-height: 85px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
+    --wyrm-green: #00FF9E;
+    --wyrm-cyan: #00FFFF;
+    --light-text: #FFFFFF;
+    --dark-bg: #0A0A1A;
+    --dark-bg-alt: #1a1a1a;
+    --control-bg: #2a2a2e;
+    --border-color: #333;
 }
 
 body {
-  font-family: var(--font-main);
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  padding: 20px;
+    font-family: 'Inter', sans-serif;
+    color: var(--light-text);
+    background-color: var(--dark-bg);
+    margin: 0;
+    /* NEW: Prevents the main page from scrolling */
+    overflow: hidden; 
 }
 
+/*
+========================================
+GRID ENGINE APP STRUCTURE
+========================================
+*/
+
 .app-wrapper {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1600px;
-  height: 100%;
-  margin: 0 auto;
+    /* NEW: Full screen height minus the main nav header */
+    height: calc(100vh - 55px); 
+    display: flex;
+    flex-direction: column;
 }
 
 .app-header {
-  text-align: center;
-  border-bottom: 2px solid var(--accent-pink);
-  padding-bottom: 15px;
-  height: var(--header-height);
-  flex-shrink: 0;
+    text-align: center;
+    padding: 1rem 0;
 }
 
-h1 {
-  margin: 0;
-  font-size: 1.8rem;
-  color: var(--accent-green);
-  text-shadow: 0 0 8px #00ff9e80;
+.app-header h1 {
+    margin: 0;
+    color: var(--wyrm-green);
 }
 
-p {
-  margin-top: 5px;
-  color: var(--text-color);
-  opacity: 0.8;
+.app-header p {
+    margin: 0;
+    color: var(--light-text);
+    opacity: 0.8;
 }
 
 .dashboard-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  align-items: stretch;
-  flex-grow: 1;
-  overflow: hidden;
-  padding-top: 20px;
+    display: flex;
+    flex-grow: 1;
+    /* NEW: Important for child scrolling */
+    overflow: hidden; 
 }
 
 #canvas-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #000;
-  border: 2px solid var(--accent-green);
-  box-shadow: 0 0 25px #00ff9e40;
-  border-radius: 8px;
-  overflow: hidden;
-  padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    min-width: 0; /* Prevents flexbox from shrinking past content size */
 }
 
 #visualizer-wrapper {
-  position: relative;
-  max-width: 100%;
-  max-height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
-canvas {
-  display: block !important;
-  visibility: visible !important;
-}
-
+/* NEW: Makes the sidebar scrollable */
 .controls-sidebar {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  overflow-y: auto;
+    width: 320px;
+    flex-shrink: 0;
+    overflow-y: auto; /* Allow vertical scrolling */
+    padding: 1rem;
+    background-color: var(--dark-bg-alt);
+    border-left: 1px solid var(--border-color);
 }
 
-#control-panel, #preset-manager, #controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 20px;
-  background-color: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+/*
+========================================
+CONTROLS & INPUTS
+========================================
+*/
+
+#controls, #preset-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 1.5rem;
 }
 
-.control-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+button, .file-input {
+    background-color: var(--control-bg);
+    color: var(--light-text);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.control-group label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--accent-green);
-}
-
-button, select, input {
-  font-family: var(--font-main);
-  background-color: #1a1a1a;
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 10px 15px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-}
-
-button:hover, select:hover {
-  border-color: var(--accent-pink);
-  color: var(--accent-pink);
+button:hover {
+    border-color: var(--wyrm-green);
 }
 
 .accent-button {
-  background-color: var(--accent-green);
-  color: var(--bg-color);
-  font-weight: 700;
-  border-color: var(--accent-green);
+    background-color: var(--wyrm-green);
+    color: var(--dark-bg);
+    font-weight: bold;
 }
 
 .accent-button:hover {
-  background-color: var(--accent-pink);
-  border-color: var(--accent-pink);
+    background-color: var(--wyrm-cyan);
 }
 
-input[type="color"] {
-  padding: 2px;
-  min-height: 40px;
+input[type="text"], select {
+    background-color: var(--control-bg);
+    color: var(--light-text);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+
+/*
+========================================
+NEW LAYOUT & UX STYLES (Collapsible Sections)
+========================================
+*/
+
+.control-group {
+    background-color: var(--control-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
+.control-group summary {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--wyrm-green);
+    cursor: pointer;
+    padding: 15px 0;
+    outline: none;
+    user-select: none;
+    display: block; /* Ensures it takes full width for clicking */
+}
+
+.control-group summary:hover {
+    color: var(--light-text);
+}
+
+/* Style for the dropdown arrow */
+.control-group summary::marker {
+    color: var(--wyrm-green);
+}
+
+.control-group[open] > summary {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 15px;
+}
+
+/* For items inside the dropdown */
+.control-group[open] {
+    padding-bottom: 1rem;
+}
+
+.control-group > details > div,
+.control-group label,
+.control-group .checkbox-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 5px; /* Indent the controls slightly */
 }
 
 input[type="range"] {
-  padding: 0;
-}
-
-@media (max-width: 1000px) {
-  body { overflow: auto; }
-  .dashboard-layout { grid-template-columns: 1fr; }
+    width: 60%; /* Give range sliders some space */
 }
