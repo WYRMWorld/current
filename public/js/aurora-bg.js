@@ -1,6 +1,12 @@
-window.addEventListener("DOMContentLoaded", function () {
+function initAuroraBackground() {
+  console.log("Aurora background script loaded");
   const canvas = document.getElementById("neon-orbs-bg");
-  if (!canvas || !canvas.getContext) return;
+  console.log("Canvas element:", canvas);
+  if (!canvas || !canvas.getContext) {
+    console.error("Canvas not found or not supported");
+    return;
+  }
+  console.log("Starting aurora background...");
   const ctx = canvas.getContext("2d");
   let width = window.innerWidth, height = window.innerHeight, dpr = window.devicePixelRatio || 1;
 
@@ -89,7 +95,13 @@ window.addEventListener("DOMContentLoaded", function () {
   function animate() {
     updateInteraction();
     drawAurora();
-    requestAnimationFrame(animate);
-  }
+    requestAnimationFrame(animate);  }
   animate();
-});
+}
+
+// Run immediately if DOM is already loaded, otherwise wait for DOMContentLoaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAuroraBackground);
+} else {
+  initAuroraBackground();
+}
